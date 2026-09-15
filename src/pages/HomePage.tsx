@@ -22,8 +22,12 @@ export const HomePage: React.FC<HomePageProps> = ({
   onOpenTrailer,
   onNavigatePage,
 }) => {
-  // Featured hero item
-  const featuredItem = mediaList.find((m) => m.isFeatured) || mediaList[0];
+  // Featured hero items (with Himitsu no AiPri animation featured prominently)
+  const featuredItems = [
+    ...mediaList.filter((m) => m.id === 'ser-aipri'),
+    ...mediaList.filter((m) => m.isFeatured && m.id !== 'ser-aipri'),
+  ];
+  const featuredItem = featuredItems[0] || mediaList[0];
 
   // Continue Watching items (derived strictly from user's watchHistory)
   const continueWatchingItems = user.watchHistory
@@ -47,10 +51,12 @@ export const HomePage: React.FC<HomePageProps> = ({
 
   return (
     <div id="home-page" className="w-full pb-20 overflow-x-hidden">
-      {/* Hero Banner Section */}
-      {featuredItem && (
+      {/* Hero Banner Section with Motion Animations & Carousel */}
+      {featuredItems.length > 0 && (
         <HeroBanner
+          items={featuredItems}
           item={featuredItem}
+          myListIds={user.myListIds}
           inMyList={user.myListIds.includes(featuredItem.id)}
           onToggleMyList={onToggleMyList}
           onPlay={onPlay}

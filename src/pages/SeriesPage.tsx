@@ -25,9 +25,13 @@ export const SeriesPage: React.FC<SeriesPageProps> = ({
   const [selectedGenre, setSelectedGenre] = useState<string>('All');
   const [sortBy, setSortBy] = useState<'popular' | 'rating' | 'newest'>('popular');
 
-  const genres = ['All', 'Sci-Fi', 'Fantasy', 'Drama', 'Action', 'Mystery', 'Crime', 'Animation'];
+  const genres = ['All', 'Animation', 'Music', 'Comedy', 'Fantasy', 'Sci-Fi', 'Drama', 'Action', 'Mystery', 'Crime'];
 
-  const featuredSeries = seriesList.find((s) => s.id === 'ser-1') || seriesList[0];
+  const featuredSeriesList = [
+    ...seriesList.filter((s) => s.id === 'ser-aipri'),
+    ...seriesList.filter((s) => s.id !== 'ser-aipri' && (s.isFeatured || s.isTrending)),
+  ];
+  const featuredSeries = featuredSeriesList[0] || seriesList[0];
   const trendingSeries = seriesList.filter((s) => s.isTrending);
   const popularSeries = seriesList.filter((s) => s.isPopular);
   const topRatedSeries = [...seriesList].sort((a, b) => b.rating - a.rating);
@@ -43,10 +47,12 @@ export const SeriesPage: React.FC<SeriesPageProps> = ({
 
   return (
     <div id="series-page" className="min-h-screen pb-24 overflow-x-hidden">
-      {/* Featured Series Hero */}
-      {featuredSeries && (
+      {/* Featured Series Hero with Motion Animations */}
+      {featuredSeriesList.length > 0 && (
         <HeroBanner
+          items={featuredSeriesList}
           item={featuredSeries}
+          myListIds={user.myListIds}
           inMyList={user.myListIds.includes(featuredSeries.id)}
           onToggleMyList={onToggleMyList}
           onPlay={onPlay}

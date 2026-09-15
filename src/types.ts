@@ -31,6 +31,7 @@ export interface MediaItem {
   description: string;
   backdropUrl: string;
   posterUrl: string;
+  logoUrl?: string;
   rating: number; // e.g. 8.9
   releaseYear: number;
   runtime?: string; // e.g. "2h 14m" (movies)

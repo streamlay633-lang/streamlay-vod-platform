@@ -71,6 +71,28 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
   const videoSource = episode?.videoUrl || item.videoUrl;
   const displayTitle = episode ? `${item.title} — S${episode.seasonNumber}:E${episode.episodeNumber} "${episode.title}"` : item.title;
 
+  // Helper to detect and extract embed URL if videoSource is an iframe tag or web embed URL
+  const extractEmbedUrl = (source?: string): string | null => {
+    if (!source) return null;
+    const trimmed = source.trim();
+    if (trimmed.toLowerCase().includes('<iframe')) {
+      const match = trimmed.match(/src=["']?([^"'>\s]+)["']?/i);
+      return match ? match[1] : null;
+    }
+    if (
+      trimmed.includes('goodstream.one') ||
+      trimmed.includes('/embed') ||
+      trimmed.includes('embed-') ||
+      trimmed.includes('youtube.com/embed') ||
+      trimmed.includes('player.vimeo.com')
+    ) {
+      return trimmed;
+    }
+    return null;
+  };
+
+  const embedUrl = extractEmbedUrl(videoSource);
+
   // Auto hide controls after inactivity
   const handleMouseMove = () => {
     setShowControls(true);
@@ -261,20 +283,30 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
       className="fixed inset-0 z-50 bg-black text-white select-none overflow-hidden flex flex-col justify-between"
       style={{ cursor: showControls ? 'default' : 'none' }}
     >
-      {/* HTML5 Native Video Tag */}
-      <video
-        ref={videoRef}
-        src={videoSource}
-        autoPlay
-        playsInline
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-        onClick={togglePlay}
-        className="w-full h-full object-contain absolute inset-0 z-0 bg-black cursor-pointer"
-      />
+      {/* Video Stream Container: Embedded IFRAME OR Native HTML5 Video */}
+      {embedUrl ? (
+        <iframe
+          src={embedUrl}
+          title={displayTitle}
+          className="w-full h-full border-0 absolute inset-0 z-0 bg-black"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+          allowFullScreen
+        />
+      ) : (
+        <video
+          ref={videoRef}
+          src={videoSource}
+          autoPlay
+          playsInline
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={handleLoadedMetadata}
+          onClick={togglePlay}
+          className="w-full h-full object-contain absolute inset-0 z-0 bg-black cursor-pointer"
+        />
+      )}
 
-      {/* Simulated Subtitles Banner if enabled */}
-      {subtitle !== 'Off' && (
+      {/* Simulated Subtitles Banner if enabled (Native video only) */}
+      {!embedUrl && subtitle !== 'Off' && (
         <div className="absolute bottom-28 inset-x-0 flex justify-center z-10 pointer-events-none px-4 text-center">
           <span className="px-4 py-1.5 rounded-lg bg-black/75 backdrop-blur-md text-white font-medium text-sm sm:text-base md:text-lg tracking-wide border border-white/10 shadow-lg">
             [Narrator: "The neural pathways converge where memory meets synthetic intent..."]
@@ -285,31 +317,44 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
       {/* Top Header Controls Bar */}
       <div
         className={`relative z-20 p-4 sm:p-6 bg-gradient-to-b from-black/90 via-black/40 to-transparent flex items-center justify-between transition-opacity duration-300 ${
-          showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          showControls || embedUrl ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       >
         <div className="flex items-center gap-4">
           <button
             id="player-back-btn"
             onClick={onBack}
-            className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all cursor-pointer"
+            className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all cursor-pointer shadow-lg"
             title="Exit Player"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
             <span className="text-[11px] font-bold uppercase tracking-wider text-violet-400">
-              Now Streaming in {videoQuality}
+              Now Streaming {embedUrl ? '• External Stream' : `in ${videoQuality}`}
             </span>
-            <h2 className="font-display font-bold text-sm sm:text-lg text-white truncate max-w-md sm:max-w-xl">
+            <h2 className="font-display font-bold text-sm sm:text-lg text-white truncate max-w-md sm:max-w-xl drop-shadow">
               {displayTitle}
             </h2>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Skip Intro Button in top right or bottom right */}
-          {showSkipIntro && currentTime < 90 && (
+          {embedUrl && (
+            <a
+              href={embedUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md text-white text-xs font-semibold border border-white/20 transition-all flex items-center gap-1.5 shadow-xl cursor-pointer"
+              title="Open video in new tab"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-violet-300" />
+              <span className="hidden sm:inline">Open Stream</span>
+            </a>
+          )}
+
+          {/* Skip Intro Button in top right (Native video only) */}
+          {!embedUrl && showSkipIntro && currentTime < 90 && (
             <button
               onClick={() => {
                 if (videoRef.current) {
@@ -367,12 +412,13 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
         </div>
       )}
 
-      {/* Bottom Controls Bar */}
-      <div
-        className={`relative z-20 p-4 sm:p-6 bg-gradient-to-t from-black/95 via-black/60 to-transparent space-y-3 transition-opacity duration-300 ${
-          showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
-      >
+      {/* Bottom Controls Bar (Native Video Only) */}
+      {!embedUrl && (
+        <div
+          className={`relative z-20 p-4 sm:p-6 bg-gradient-to-t from-black/95 via-black/60 to-transparent space-y-3 transition-opacity duration-300 ${
+            showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+        >
         {/* Timeline Scrubber */}
         <div
           className="relative w-full h-2 hover:h-3.5 bg-white/20 hover:bg-white/30 rounded-full cursor-pointer transition-all flex items-center group/scrubber"
@@ -673,6 +719,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 };

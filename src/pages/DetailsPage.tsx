@@ -107,10 +107,22 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({
                 </span>
               </div>
 
-              {/* Title */}
-              <h1 className="font-display text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
-                {item.title}
-              </h1>
+              {/* Title or Official Logo */}
+              {item.logoUrl ? (
+                <div className="py-2">
+                  <img
+                    src={item.logoUrl}
+                    alt={item.title}
+                    referrerPolicy="no-referrer"
+                    className="max-h-20 sm:max-h-28 md:max-h-36 w-auto object-contain mx-auto md:mx-0 drop-shadow-[0_8px_24px_rgba(0,0,0,0.85)]"
+                  />
+                  <h1 className="sr-only">{item.title}</h1>
+                </div>
+              ) : (
+                <h1 className="font-display text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
+                  {item.title}
+                </h1>
+              )}
 
               {item.tagline && (
                 <p className="text-sm sm:text-base font-medium text-violet-300/90 italic">

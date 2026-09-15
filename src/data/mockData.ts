@@ -86,6 +86,83 @@ export const MOCK_MEDIA: MediaItem[] = [
     ]
   },
   {
+    id: 'ser-aipri',
+    title: 'Himitsu no AiPri',
+    type: 'series',
+    tagline: 'Step into the secret virtual stage and sparkle like an idol!',
+    description: 'First-year middle school students Himari Aozora and Mitsuki Hoshikawa enroll in Private Paradise Academy. Using their mysterious AiPri Bracelets and cards, they debut on the secret virtual stage where singing, dancing, and heartfelt friendships sparkle.',
+    backdropUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Himitsu%20no%20AiPri/Backdrop/Himitsu%20no%20AiPri%20-%20Backdrop.jpg',
+    posterUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Himitsu%20no%20AiPri/Poster/Himitsu%20no%20AiPri%20-%20Poster.webp',
+    logoUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Himitsu%20no%20AiPri/Logo/Himitsu%20no%20AiPri%20-%20Logo.png',
+    rating: 9.2,
+    releaseYear: 2024,
+    seasonsCount: 1,
+    genres: ['Animation', 'Comedy', 'Music', 'Fantasy'],
+    ageRating: 'TV-PG',
+    isTrending: true,
+    isPopular: true,
+    isNewRelease: true,
+    isTopRated: true,
+    isFeatured: true,
+    director: 'Junichi Fujisaku & Kentaro Yamaguchi',
+    cast: [
+      { name: 'Minori Fujidera', role: 'Himari Aozora (Voice)', photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Sae Hiratsuka', role: 'Mitsuki Hoshikawa (Voice)', photoUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Yuriko Kubota', role: 'Tsumugi Suzukaze (Voice)', photoUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Yurika Kubo', role: 'Sakura Ichijo (Voice)', photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80' }
+    ],
+    videoUrl: 'https://goodstream.one/embed-020836gc8oi8.html',
+    trailerUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    seasons: [
+      {
+        seasonNumber: 1,
+        title: 'Season 1: The Secret AiPri Stage',
+        episodes: [
+          {
+            id: 'ep-aipri-1',
+            episodeNumber: 1,
+            seasonNumber: 1,
+            title: "Himari's AiPri Debut!",
+            duration: '24:22',
+            description: 'Himari enrolls in Private Paradise Academy and is drawn into the glittering virtual world of AiPri with her dazzling new bracelet.',
+            thumbnail: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Himitsu%20no%20AiPri/Episodes%20Thumbnail/E1.jpg',
+            videoUrl: 'https://goodstream.one/embed-020836gc8oi8.html'
+          },
+          {
+            id: 'ep-aipri-2',
+            episodeNumber: 2,
+            seasonNumber: 1,
+            title: 'Mitsuki’s Secret Promise',
+            duration: '24m',
+            description: 'Mitsuki discovers Himari’s secret performance and must decide if she has the courage to step onto the idol stage beside her best friend.',
+            thumbnail: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Himitsu%20no%20AiPri/Poster/Himitsu%20no%20AiPri%20-%20Poster.webp',
+            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+          },
+          {
+            id: 'ep-aipri-3',
+            episodeNumber: 3,
+            seasonNumber: 1,
+            title: 'Sparkling Friendship Duet',
+            duration: '24m',
+            description: 'The duo prepares for their first co-op concert as secret fans across the academy vote for their favorite styling cards.',
+            thumbnail: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Himitsu%20no%20AiPri/Backdrop/Himitsu%20no%20AiPri%20-%20Backdrop.jpg',
+            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+          },
+          {
+            id: 'ep-aipri-4',
+            episodeNumber: 4,
+            seasonNumber: 1,
+            title: 'The Starlight Grand Prix Challenge',
+            duration: '24m',
+            description: 'A surprise rival idol appears on the virtual runway, challenging Himari and Mitsuki to elevate their performance.',
+            thumbnail: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Himitsu%20no%20AiPri/Poster/Himitsu%20no%20AiPri%20-%20Poster.webp',
+            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+          }
+        ]
+      }
+    ]
+  },
+  {
     id: 'mov-2',
     title: 'Solaris Drift',
     type: 'movie',
