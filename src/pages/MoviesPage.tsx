@@ -42,6 +42,20 @@ export const MoviesPage: React.FC<MoviesPageProps> = ({
       return (b.isPopular ? 1 : 0) - (a.isPopular ? 1 : 0);
     });
 
+  if (moviesList.length === 0) {
+    return (
+      <div id="movies-page" className="min-h-screen pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col items-center justify-center text-center">
+        <div className="w-16 h-16 rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-violet-400 mb-4 shadow-xl">
+          <Film className="w-8 h-8" />
+        </div>
+        <h2 className="font-display text-2xl font-bold text-white mb-2">No Movies in Catalog</h2>
+        <p className="text-sm text-neutral-400 max-w-md mb-6">
+          Movies have been removed from the catalog. Enjoy streaming <span className="text-violet-300 font-medium">Himitsu no AiPri</span> in TV Series or explore Live TV channels.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div id="movies-page" className="min-h-screen pb-24 overflow-x-hidden">
       {/* Featured Movie Hero */}

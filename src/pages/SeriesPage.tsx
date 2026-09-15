@@ -25,7 +25,7 @@ export const SeriesPage: React.FC<SeriesPageProps> = ({
   const [selectedGenre, setSelectedGenre] = useState<string>('All');
   const [sortBy, setSortBy] = useState<'popular' | 'rating' | 'newest'>('popular');
 
-  const genres = ['All', 'Animation', 'Music', 'Comedy', 'Fantasy', 'Sci-Fi', 'Drama', 'Action', 'Mystery', 'Crime'];
+  const genres = ['All', ...Array.from(new Set(seriesList.flatMap((s) => s.genres)))];
 
   const featuredSeriesList = [
     ...seriesList.filter((s) => s.id === 'ser-aipri'),
