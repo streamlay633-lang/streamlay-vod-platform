@@ -1,0 +1,6 @@
+{
+  "name": "StreamLay",
+  "description": "A modern, premium VOD and Live TV streaming web application with cinematic discovery, immersive 4K video playback, and personalized watchlist.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
