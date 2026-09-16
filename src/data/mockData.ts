@@ -93,6 +93,35 @@ export const MOCK_MEDIA: MediaItem[] = [
         ]
       }
     ]
+  },
+  {
+    id: 'mov-gta6',
+    title: 'Grand Theft Auto VI: An Extended Look',
+    type: 'movie',
+    tagline: 'Welcome to Vice City, Leonida. Crime, sun, and neon.',
+    description: 'An exclusive extended look into Grand Theft Auto VI, exploring the sun-soaked streets of Vice City and the broader state of Leonida. Featuring cinematic breakdowns, character insights into Lucia and Jason, next-generation visuals, and developer perspectives on the most anticipated entertainment release.',
+    backdropUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/Movies/Grand%20Theft%20Auto%20VI:%20An%20Extended%20Look/Backdrop/Grand%20Theft%20Auto%20VI%20An%20Extended%20Look%20-%20Backdrop.webp',
+    posterUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/Movies/Grand%20Theft%20Auto%20VI:%20An%20Extended%20Look/Poster/Grand%20Theft%20Auto%20VI%20An%20Extended%20Look%20-%20Poster.webp',
+    thumbnailUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/Movies/Grand%20Theft%20Auto%20VI:%20An%20Extended%20Look/Movie%20Thumbnail/Movie.jpg',
+    logoUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/Movies/Grand%20Theft%20Auto%20VI:%20An%20Extended%20Look/Logo/Grand%20Theft%20Auto%20VI%20An%20Extended%20Look%20-%20Logo.webp',
+    rating: 9.9,
+    releaseYear: 2025,
+    runtime: '26:49',
+    genres: ['Action', 'Crime', 'Documentary'],
+    ageRating: 'M',
+    isTrending: true,
+    isPopular: true,
+    isNewRelease: true,
+    isFeatured: true,
+    isTopRated: true,
+    director: 'Rockstar Games',
+    cast: [
+      { name: 'Lucia', role: 'Protagonist', photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Jason', role: 'Protagonist', photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Sam Houser', role: 'Executive Producer', photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80' }
+    ],
+    videoUrl: 'https://goodstream.one/embed-pps4y8zgd5tl.html',
+    trailerUrl: 'https://goodstream.one/embed-pps4y8zgd5tl.html'
   }
 ];
 

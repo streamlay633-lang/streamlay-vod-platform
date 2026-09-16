@@ -25,9 +25,9 @@ export const MoviesPage: React.FC<MoviesPageProps> = ({
   const [selectedGenre, setSelectedGenre] = useState<string>('All');
   const [sortBy, setSortBy] = useState<'popular' | 'rating' | 'newest'>('popular');
 
-  const movieGenres = ['All', 'Action', 'Sci-Fi', 'Thriller', 'Drama', 'Comedy', 'Horror', 'Adventure'];
+  const movieGenres = ['All', ...Array.from(new Set(moviesList.flatMap((m) => m.genres)))];
 
-  const featuredMovie = moviesList.find((m) => m.id === 'mov-1') || moviesList[0];
+  const featuredMovie = moviesList.find((m) => m.id === 'mov-gta6') || moviesList[0];
   const trendingMovies = moviesList.filter((m) => m.isTrending);
   const popularMovies = moviesList.filter((m) => m.isPopular);
   const newReleases = moviesList.filter((m) => m.isNewRelease || m.releaseYear >= 2025);

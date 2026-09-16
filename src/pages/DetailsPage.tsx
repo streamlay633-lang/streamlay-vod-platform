@@ -219,6 +219,50 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({
           </div>
         </section>
 
+        {/* Feature Film Stream & Thumbnail for Movies */}
+        {item.type === 'movie' && (
+          <section className="rounded-3xl bg-[#0e0e18] border border-white/[0.06] p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h3 className="font-display text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                  <Play className="w-5 h-5 text-violet-400 fill-current" />
+                  <span>Feature Film Stream</span>
+                </h3>
+                <p className="text-xs text-neutral-400">Watch the complete presentation in 4K Ultra HD with crystal-clear audio.</p>
+              </div>
+              <button
+                onClick={() => onPlay(item)}
+                className="px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold text-sm transition-all shadow-lg shadow-violet-600/30 flex items-center gap-2 self-start sm:self-auto cursor-pointer"
+              >
+                <Play className="w-4 h-4 fill-current" />
+                <span>Stream Now ({item.runtime})</span>
+              </button>
+            </div>
+
+            <div
+              onClick={() => onPlay(item)}
+              className="relative aspect-video max-w-3xl rounded-2xl overflow-hidden bg-neutral-900 border border-white/10 group cursor-pointer shadow-2xl"
+            >
+              <img
+                src={item.thumbnailUrl || item.backdropUrl}
+                alt={item.title}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30 group-hover:via-black/10 transition-all flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-violet-600/90 group-hover:bg-violet-500 text-white flex items-center justify-center shadow-xl shadow-purple-950/60 transform group-hover:scale-110 transition-transform">
+                  <Play className="w-7 h-7 fill-current translate-x-0.5" />
+                </div>
+              </div>
+              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+                <span className="text-sm font-bold text-white drop-shadow">{item.title}</span>
+                <span className="px-2.5 py-1 rounded-md bg-black/70 backdrop-blur-md text-xs font-semibold text-neutral-200 border border-white/10">
+                  {item.runtime}
+                </span>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Season & Episode Selector for Series */}
         {item.type === 'series' && seasons.length > 0 && (
           <section className="rounded-3xl bg-[#0e0e18] border border-white/[0.06] p-6 sm:p-8">

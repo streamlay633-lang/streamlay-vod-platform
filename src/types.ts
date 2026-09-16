@@ -31,6 +31,7 @@ export interface MediaItem {
   description: string;
   backdropUrl: string;
   posterUrl: string;
+  thumbnailUrl?: string;
   logoUrl?: string;
   rating: number; // e.g. 8.9
   releaseYear: number;
