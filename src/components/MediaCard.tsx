@@ -77,7 +77,7 @@ export const MediaCard: React.FC<MediaCardProps> = ({
               className="w-10 h-10 rounded-full bg-violet-600 hover:bg-violet-500 text-white flex items-center justify-center shadow-lg shadow-violet-600/50 hover:scale-105 active:scale-95 transition-all"
               title="Play Now"
             >
-              <Play className="w-4 h-4 fill-white ml-0.5" />
+              <Play className="w-4 h-4 fill-white ltr:ml-0.5 rtl:mr-0.5" />
             </button>
 
             <button
@@ -99,7 +99,7 @@ export const MediaCard: React.FC<MediaCardProps> = ({
                 e.stopPropagation();
                 onViewDetails(item);
               }}
-              className="w-9 h-9 rounded-full bg-black/60 border border-white/20 text-white hover:border-white/50 flex items-center justify-center backdrop-blur-md ml-auto hover:bg-white/10 transition-all"
+              className="w-9 h-9 rounded-full bg-black/60 border border-white/20 text-white hover:border-white/50 flex items-center justify-center backdrop-blur-md ms-auto hover:bg-white/10 transition-all"
               title="More Info"
             >
               <Info className="w-4 h-4" />
@@ -121,7 +121,7 @@ export const MediaCard: React.FC<MediaCardProps> = ({
         </h3>
         <div className="flex items-center justify-between text-xs text-neutral-400 mt-1">
           <span className="truncate">{item.genres.slice(0, 2).join(' • ')}</span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] text-neutral-300 shrink-0 ml-1">
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] text-neutral-300 shrink-0 ms-1">
             {item.ageRating}
           </span>
         </div>

@@ -14,13 +14,15 @@ import {
   Volume2,
   VolumeX
 } from 'lucide-react';
-import { MediaItem } from '../types';
+import { MediaItem, UserProfile } from '../types';
+import { getTranslation } from '../utils/translations';
 
 interface HeroBannerProps {
   item?: MediaItem;
   items?: MediaItem[];
   inMyList?: boolean;
   myListIds?: string[];
+  user?: UserProfile;
   onToggleMyList: (item: MediaItem, e: React.MouseEvent) => void;
   onPlay: (item: MediaItem) => void;
   onViewDetails: (item: MediaItem) => void;
@@ -32,6 +34,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   items,
   inMyList = false,
   myListIds = [],
+  user,
   onToggleMyList,
   onPlay,
   onViewDetails,
@@ -118,12 +121,12 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           />
 
           {/* Cinematic Vignettes and Multi-layer Gradients */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#07070b] via-[#07070b]/80 to-transparent z-10" />
+          <div className="absolute inset-0 ltr:bg-gradient-to-r rtl:bg-gradient-to-l from-[#07070b] via-[#07070b]/80 to-transparent z-10" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#07070b] via-[#07070b]/40 to-transparent z-10" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#07070b]/70 via-transparent to-transparent z-10" />
           
           {/* Subtle Ambient Glow */}
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-violet-600/15 rounded-full blur-3xl pointer-events-none z-10" />
+          <div className="absolute bottom-0 ltr:left-0 rtl:right-0 w-96 h-96 bg-violet-600/15 rounded-full blur-3xl pointer-events-none z-10" />
         </motion.div>
       </AnimatePresence>
 
@@ -233,8 +236,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
                   onClick={() => onPlay(currentItem)}
                   className="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-semibold flex items-center gap-2.5 shadow-xl shadow-purple-900/40 hover:scale-105 active:scale-95 transition-all cursor-pointer"
                 >
-                  <Play className="w-5 h-5 fill-white" />
-                  <span>Watch Now</span>
+                  <Play className="w-5 h-5 fill-white ltr:ml-0.5 rtl:mr-0.5" />
+                  <span>{getTranslation('playNow', user?.preferredLanguage)}</span>
                 </button>
 
                 {onOpenTrailer && (
@@ -243,7 +246,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
                     className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium flex items-center gap-2 backdrop-blur-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
                   >
                     <Clapperboard className="w-5 h-5 text-violet-300" />
-                    <span>Trailer</span>
+                    <span>{getTranslation('watchTrailer', user?.preferredLanguage)}</span>
                   </button>
                 )}
 
@@ -257,7 +260,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
                   }`}
                 >
                   {isCurrentInList ? <Check className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
-                  <span>{isCurrentInList ? 'In My List' : 'Add to My List'}</span>
+                  <span>{isCurrentInList ? getTranslation('inList', user?.preferredLanguage) : getTranslation('addToList', user?.preferredLanguage)}</span>
                 </button>
 
                 <button
@@ -266,7 +269,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
                   className="px-4 py-3 rounded-xl bg-black/40 hover:bg-white/10 border border-white/15 text-neutral-200 hover:text-white flex items-center gap-2 backdrop-blur-md transition-all cursor-pointer"
                 >
                   <Info className="w-5 h-5" />
-                  <span>More Info</span>
+                  <span>{getTranslation('moreInfo', user?.preferredLanguage)}</span>
                 </button>
               </div>
             </motion.div>
@@ -276,7 +279,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 
       {/* Carousel Navigation & Indicators (When multiple banners exist) */}
       {bannerList.length > 1 && (
-        <div className="absolute bottom-6 right-4 sm:right-8 lg:right-12 z-30 flex items-center gap-3">
+        <div className="absolute bottom-6 ltr:right-4 rtl:left-4 sm:ltr:right-8 sm:rtl:left-8 lg:ltr:right-12 lg:rtl:left-12 z-30 flex items-center gap-3">
           {/* Arrow Buttons */}
           <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md p-1 rounded-2xl border border-white/10">
             <button
@@ -284,14 +287,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               aria-label="Previous Slide"
               className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
             </button>
             <button
               onClick={handleNext}
               aria-label="Next Slide"
               className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </button>
           </div>
 

@@ -22,6 +22,7 @@ import { DetailsPage } from './pages/DetailsPage';
 import { VideoPlayerPage } from './pages/VideoPlayerPage';
 import { PinInput } from './components/PinInput';
 import { Play, Sparkles, Tv, Shield, Heart, Lock, ShieldAlert } from 'lucide-react';
+import { normalizeLanguage, SUPPORTED_LANGUAGES, getTranslation } from './utils/translations';
 
 const STORAGE_USER_KEY = 'streamlay_user_profile';
 const STORAGE_PAGE_KEY = 'streamlay_current_page';
@@ -108,6 +109,14 @@ export default function App() {
       localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(user));
     } catch (e) {}
   }, [user]);
+
+  // Synchronize document direction and language code for French, Arabic (RTL), and English
+  useEffect(() => {
+    const lang = normalizeLanguage(user.preferredLanguage);
+    const langInfo = SUPPORTED_LANGUAGES[lang];
+    document.documentElement.setAttribute('dir', langInfo.dir);
+    document.documentElement.setAttribute('lang', langInfo.code);
+  }, [user.preferredLanguage]);
 
   // Persist page
   useEffect(() => {
@@ -320,6 +329,7 @@ export default function App() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           onLogout={handleLogout}
+          onUpdateUser={handleUpdateUser}
         />
       )}
 
@@ -527,13 +537,13 @@ export default function App() {
 
             <div>
               <span className="px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase bg-red-500/20 text-red-300 border border-red-500/30">
-                {parentalGateTarget.item.ageRating || 'RATED M'} • Sensitive Content
+                {parentalGateTarget.item.ageRating || 'RATED M'} • {getTranslation('parentalLockActive', user.preferredLanguage)}
               </span>
               <h3 className="font-display text-xl font-bold text-white mt-2">
-                Parental PIN Required
+                {getTranslation('parentalPinRequiredModal', user.preferredLanguage)}
               </h3>
               <p className="text-xs text-neutral-300 mt-1">
-                Access to <span className="font-semibold text-white">"{parentalGateTarget.item.title}"</span> is restricted by parental controls. Enter your 4-digit profile PIN to continue.
+                Access to <span className="font-semibold text-white">"{parentalGateTarget.item.title}"</span> is restricted by parental controls. {getTranslation('enterPinToUnlock', user.preferredLanguage)}.
               </p>
             </div>
 
@@ -563,7 +573,7 @@ export default function App() {
                 onClick={() => setParentalGateTarget(null)}
                 className="px-4 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-neutral-300 text-xs font-semibold cursor-pointer"
               >
-                Cancel
+                {getTranslation('cancel', user.preferredLanguage)}
               </button>
               <button
                 type="button"
@@ -571,7 +581,7 @@ export default function App() {
                 onClick={handleVerifyParentalGate}
                 className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-violet-600 hover:from-amber-500 hover:to-violet-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-bold transition-all shadow-lg shadow-amber-600/20 cursor-pointer"
               >
-                Unlock & Play
+                {getTranslation('verifyAndUnlock', user.preferredLanguage)}
               </button>
             </div>
           </div>

@@ -56,6 +56,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         <HeroBanner
           items={featuredItems}
           item={featuredItem}
+          user={user}
           myListIds={user.myListIds}
           inMyList={user.myListIds.includes(featuredItem.id)}
           onToggleMyList={onToggleMyList}

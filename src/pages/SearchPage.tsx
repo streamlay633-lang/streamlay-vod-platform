@@ -123,7 +123,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
 
         {/* Big Search Input Box */}
         <div className="relative mt-4">
-          <div className="absolute inset-y-0 left-0 pl-4 sm:pl-5 flex items-center pointer-events-none">
+          <div className="absolute inset-y-0 ltr:left-0 rtl:right-0 ltr:pl-4 sm:ltr:pl-5 rtl:pr-4 sm:rtl:pr-5 flex items-center pointer-events-none">
             <Search className="h-5 w-5 sm:h-6 sm:w-6 text-violet-400" />
           </div>
 
@@ -134,14 +134,14 @@ export const SearchPage: React.FC<SearchPageProps> = ({
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search by title, genre, actor, or keyword..."
             autoFocus
-            className="w-full pl-12 sm:pl-14 pr-12 py-4 rounded-2xl bg-[#12121e]/90 border border-white/[0.12] text-white placeholder-neutral-500 text-sm sm:text-lg focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/20 shadow-2xl transition-all"
+            className="w-full ltr:pl-12 sm:ltr:pl-14 ltr:pr-12 rtl:pr-12 sm:rtl:pr-14 rtl:pl-12 py-4 rounded-2xl bg-[#12121e]/90 border border-white/[0.12] text-white placeholder-neutral-500 text-sm sm:text-lg focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/20 shadow-2xl transition-all"
           />
 
           {query && (
             <button
               id="search-clear-btn"
               onClick={() => setQuery('')}
-              className="absolute inset-y-0 right-0 pr-4 flex items-center text-neutral-400 hover:text-white transition-colors cursor-pointer"
+              className="absolute inset-y-0 ltr:right-0 rtl:left-0 ltr:pr-4 rtl:pl-4 flex items-center text-neutral-400 hover:text-white transition-colors cursor-pointer"
               title="Clear search"
             >
               <div className="p-1 rounded-full bg-white/10 hover:bg-white/20">

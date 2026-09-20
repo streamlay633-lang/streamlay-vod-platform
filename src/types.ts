@@ -9,6 +9,10 @@ export interface Episode {
   description: string;
   thumbnail: string;
   videoUrl: string;
+  airDate?: string;
+  isNew?: boolean;
+  quality?: string;
+  audioLanguage?: string;
 }
 
 export interface Season {
@@ -21,6 +25,23 @@ export interface CastMember {
   name: string;
   role: string;
   photoUrl: string;
+  characterName?: string;
+  actorName?: string;
+  characterBio?: string;
+  characterBadge?: string;
+  personalityTraits?: string[];
+  signatureQuote?: string;
+  voiceActor?: string;
+  isMain?: boolean;
+}
+
+export interface MovieChapter {
+  id: string;
+  chapterNumber: number;
+  title: string;
+  timestamp: string;
+  description: string;
+  thumbnail: string;
 }
 
 export interface MediaItem {
@@ -49,6 +70,9 @@ export interface MediaItem {
   videoUrl: string;
   trailerUrl: string;
   seasons?: Season[];
+  chapters?: MovieChapter[];
+  franchiseUniverse?: string;
+  franchiseConnection?: string;
   // For continue watching
   progressPercentage?: number;
   lastWatchedTimestamp?: string;

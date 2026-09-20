@@ -36,6 +36,12 @@ import { MediaItem, UserProfile, ParentalRestrictionLevel } from '../types';
 import { MediaCard } from '../components/MediaCard';
 import { PROFILE_PICTURE_CATEGORIES } from '../data/mockData';
 import { PinInput } from '../components/PinInput';
+import { 
+  getTranslation, 
+  normalizeLanguage, 
+  SUPPORTED_LANGUAGES, 
+  SupportedLanguage 
+} from '../utils/translations';
 
 interface ProfilePageProps {
   user: UserProfile;
@@ -56,7 +62,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   onViewDetails,
   onLogout,
 }) => {
-  const [activeTab, setActiveTab] = useState<'mylist' | 'history' | 'avatars' | 'subscription' | 'settings' | 'parental'>('mylist');
+  const [activeTab, setActiveTab] = useState<'mylist' | 'history' | 'avatars' | 'subscription' | 'settings' | 'parental' | 'languages'>('mylist');
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editName, setEditName] = useState(user.name);
   const [editEmail, setEditEmail] = useState(user.email);
@@ -67,6 +73,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const currentSavedPin = user.parentalControls?.pin || user.parentalPin || '';
   const isParentalEnabled = Boolean(user.parentalControls?.isEnabled && currentSavedPin);
   
+  // System Language
+  const currentLang = normalizeLanguage(user.preferredLanguage);
+  const t = (key: Parameters<typeof getTranslation>[0]) => getTranslation(key, user.preferredLanguage);
+
   const [isPinModalOpen, setIsPinModalOpen] = useState(false);
   const [pinModalMode, setPinModalMode] = useState<'set' | 'change' | 'disable' | 'reset'>('set');
   const [pinStep, setPinStep] = useState<'verify_current' | 'enter_new' | 'confirm_new'>('enter_new');
@@ -291,6 +301,17 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
               <div className="flex items-center justify-center gap-2">
                 <button
+                  id="header-lang-btn"
+                  onClick={() => setActiveTab('languages')}
+                  className="px-3.5 py-2 rounded-xl bg-violet-500/10 hover:bg-violet-500/20 border border-violet-500/30 text-xs font-semibold text-violet-300 transition-all cursor-pointer flex items-center gap-1.5"
+                  title="Switch Language (English, French, Arabic)"
+                >
+                  <Globe className="w-3.5 h-3.5 text-violet-400" />
+                  <span>{SUPPORTED_LANGUAGES[currentLang].flag}</span>
+                  <span className="hidden sm:inline">{SUPPORTED_LANGUAGES[currentLang].nativeName}</span>
+                </button>
+
+                <button
                   id="choose-avatar-header-btn"
                   onClick={() => setActiveTab('avatars')}
                   className="px-4 py-2 rounded-xl bg-pink-500/15 hover:bg-pink-500/25 border border-pink-500/30 text-xs font-semibold text-pink-300 transition-all cursor-pointer flex items-center gap-1.5"
@@ -338,7 +359,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             </div>
 
             {/* Quick Metrics Bar */}
-            <div className="mt-6 pt-5 border-t border-white/[0.08] grid grid-cols-3 sm:flex sm:items-center sm:gap-8 text-center sm:text-left">
+            <div className="mt-6 pt-5 border-t border-white/[0.08] grid grid-cols-3 sm:flex sm:items-center sm:gap-8 text-center sm:text-start">
               <div>
                 <span className="text-xs text-neutral-400">My Watchlist</span>
                 <p className="text-lg sm:text-xl font-bold text-white">{myListItems.length} titles</p>
@@ -367,7 +388,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           }`}
         >
           <Bookmark className="w-4 h-4" />
-          <span>My Watchlist ({myListItems.length})</span>
+          <span>{t('myWatchlist')} ({myListItems.length})</span>
         </button>
 
         <button
@@ -379,7 +400,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           }`}
         >
           <History className="w-4 h-4" />
-          <span>Watch History</span>
+          <span>{t('watchHistory')}</span>
         </button>
 
         <button
@@ -391,7 +412,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           }`}
         >
           <Sparkles className="w-4 h-4 text-pink-400" />
-          <span>Profile Pictures</span>
+          <span>{t('avatars')}</span>
           <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-pink-500/20 text-pink-300 border border-pink-500/30">
             Onegai AiPri
           </span>
@@ -406,7 +427,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           }`}
         >
           <CreditCard className="w-4 h-4" />
-          <span>Subscription & Billing</span>
+          <span>{t('subscriptionBilling')}</span>
         </button>
 
         <button
@@ -418,7 +439,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           }`}
         >
           <Settings className="w-4 h-4" />
-          <span>Playback & Preferences</span>
+          <span>{t('playbackPreferences')}</span>
         </button>
 
         <button
@@ -431,7 +452,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           }`}
         >
           <Lock className={`w-4 h-4 ${isParentalEnabled ? 'text-amber-400' : ''}`} />
-          <span>Parental Controls</span>
+          <span>{t('parentalControls')}</span>
           {isParentalEnabled ? (
             <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
@@ -442,6 +463,23 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               Off
             </span>
           )}
+        </button>
+
+        <button
+          id="profile-languages-tab-btn"
+          onClick={() => setActiveTab('languages')}
+          className={`px-4 py-3 text-sm font-semibold border-b-2 transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap ${
+            activeTab === 'languages'
+              ? 'border-violet-500 text-white font-bold'
+              : 'border-transparent text-neutral-400 hover:text-white'
+          }`}
+        >
+          <Globe className="w-4 h-4 text-violet-400" />
+          <span>{t('systemLanguage')}</span>
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-violet-500/20 text-violet-300 border border-violet-500/30 flex items-center gap-1">
+            <span>{SUPPORTED_LANGUAGES[currentLang].flag}</span>
+            <span>{SUPPORTED_LANGUAGES[currentLang].code.toUpperCase()}</span>
+          </span>
         </button>
       </div>
 
@@ -676,22 +714,87 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             </div>
 
             {/* Language Selection */}
-            <div className="pt-4 flex items-center justify-between">
-              <div>
-                <h4 className="text-sm font-semibold text-white">Interface & Audio Language</h4>
-                <p className="text-xs text-neutral-400">Default audio track and subtitles.</p>
+            <div className="pt-5 space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <Globe className="w-4 h-4 text-violet-400" />
+                    <h4 className="text-sm font-semibold text-white">
+                      {t('interfaceLanguage')}
+                    </h4>
+                  </div>
+                  <p className="text-xs text-neutral-400 mt-0.5">
+                    {t('interfaceLanguageDesc')}
+                  </p>
+                </div>
+                <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-violet-500/15 text-violet-300 border border-violet-500/30 uppercase tracking-wider">
+                  {currentLang === 'ar' ? 'RTL • العربية' : currentLang === 'fr' ? 'LTR • Français' : 'LTR • English'}
+                </span>
               </div>
-              <select
-                value={user.preferredLanguage}
-                onChange={(e) => onUpdateUser({ preferredLanguage: e.target.value })}
-                className="bg-[#171724] border border-white/[0.12] text-xs text-neutral-200 rounded-xl px-3 py-2 focus:outline-none focus:border-violet-500 cursor-pointer"
-              >
-                <option value="English (US)">English (US)</option>
-                <option value="Spanish (ES)">Español</option>
-                <option value="French (FR)">Français</option>
-                <option value="German (DE)">Deutsch</option>
-                <option value="Japanese (JP)">日本語</option>
-              </select>
+
+              {/* System Language Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                {(Object.keys(SUPPORTED_LANGUAGES) as SupportedLanguage[]).map((langKey) => {
+                  const info = SUPPORTED_LANGUAGES[langKey];
+                  const isSelected = currentLang === langKey;
+                  return (
+                    <button
+                      key={langKey}
+                      type="button"
+                      onClick={() => onUpdateUser({ preferredLanguage: info.name })}
+                      className={`p-4 rounded-2xl border text-start transition-all cursor-pointer relative flex flex-col justify-between ${
+                        isSelected
+                          ? 'bg-violet-600/20 border-violet-500 text-white shadow-lg shadow-violet-600/20 ring-2 ring-violet-500/50'
+                          : 'bg-[#151522] border-white/[0.08] hover:border-white/20 text-neutral-300 hover:text-white'
+                      }`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-2xl">{info.flag}</span>
+                          {isSelected ? (
+                            <div className="w-5 h-5 rounded-full bg-violet-600 flex items-center justify-center text-white shadow">
+                              <Check className="w-3 h-3" />
+                            </div>
+                          ) : (
+                            <span className="text-[10px] text-neutral-500 font-mono uppercase px-1.5 py-0.5 rounded bg-white/[0.04]">
+                              {info.dir}
+                            </span>
+                          )}
+                        </div>
+                        <div className="font-bold text-sm text-white">{info.nativeName}</div>
+                        <div className="text-[11px] text-neutral-400 mt-0.5 flex items-center justify-between">
+                          <span>{info.name}</span>
+                          {info.dir === 'rtl' && (
+                            <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[9px] font-bold">RTL</span>
+                          )}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Secondary Select Dropdown */}
+              <div className="flex items-center justify-between pt-1">
+                <span className="text-xs text-neutral-400">Audio Track & Subtitle Dialect:</span>
+                <select
+                  value={user.preferredLanguage}
+                  onChange={(e) => onUpdateUser({ preferredLanguage: e.target.value })}
+                  className="bg-[#171724] border border-white/[0.12] text-xs text-neutral-200 rounded-xl px-3 py-2 focus:outline-none focus:border-violet-500 cursor-pointer"
+                >
+                  {(Object.keys(SUPPORTED_LANGUAGES) as SupportedLanguage[]).map((langKey) => {
+                    const info = SUPPORTED_LANGUAGES[langKey];
+                    return (
+                      <option key={langKey} value={info.name}>
+                        {info.flag} {info.nativeName} ({info.name})
+                      </option>
+                    );
+                  })}
+                  <option value="Spanish (ES)">🇪🇸 Español (Spanish)</option>
+                  <option value="German (DE)">🇩🇪 Deutsch (German)</option>
+                  <option value="Japanese (JP)">🇯🇵 日本語 (Japanese)</option>
+                </select>
+              </div>
             </div>
 
             {/* Autoplay Next Episode */}
@@ -701,8 +804,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 <p className="text-xs text-neutral-400">Automatically queue and play next episode in series.</p>
               </div>
               <button
+                dir="ltr"
                 onClick={() => onUpdateUser({ autoplayNext: !user.autoplayNext })}
-                className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer ${
+                className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
                   user.autoplayNext ? 'bg-violet-600' : 'bg-white/20'
                 }`}
               >
@@ -721,8 +825,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 <p className="text-xs text-neutral-400">Balances dynamic range between whisper dialogue and loud action.</p>
               </div>
               <button
+                dir="ltr"
                 onClick={() => onUpdateUser({ soundEffects: !user.soundEffects })}
-                className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer ${
+                className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
                   user.soundEffects ? 'bg-violet-600' : 'bg-white/20'
                 }`}
               >
@@ -741,8 +846,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 <p className="text-xs text-neutral-400">Receive notifications when your favorite actors release new movies.</p>
               </div>
               <button
+                dir="ltr"
                 onClick={() => onUpdateUser({ emailNotifications: !user.emailNotifications })}
-                className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer ${
+                className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${
                   user.emailNotifications ? 'bg-violet-600' : 'bg-white/20'
                 }`}
               >
@@ -783,6 +889,187 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 <Lock className="w-3.5 h-3.5" />
                 <span>Configure PIN</span>
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tab: System Languages & Localization Center */}
+      {activeTab === 'languages' && (
+        <div className="space-y-6 max-w-4xl animate-fadeIn">
+          {/* Main Language Center Header */}
+          <div className="rounded-3xl bg-gradient-to-r from-violet-950/40 via-[#0f0f18] to-purple-950/30 border border-white/[0.08] p-6 sm:p-8 relative overflow-hidden">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-violet-600/20 text-violet-300 border border-violet-500/40 flex items-center gap-1.5">
+                    <Globe className="w-3.5 h-3.5 text-violet-400" />
+                    <span>{t('systemLanguage')}</span>
+                  </span>
+                  <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-white/[0.06] text-neutral-300">
+                    {SUPPORTED_LANGUAGES[currentLang].dir.toUpperCase()} Layout
+                  </span>
+                </div>
+                <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                  {t('interfaceLanguage')}
+                </h3>
+                <p className="text-sm text-neutral-300 mt-2 max-w-2xl leading-relaxed">
+                  {t('interfaceLanguageDesc')}
+                </p>
+              </div>
+
+              <div className="flex sm:flex-col items-center sm:items-end justify-between gap-2 p-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] shrink-0">
+                <span className="text-[11px] text-neutral-400">Current Active</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">{SUPPORTED_LANGUAGES[currentLang].flag}</span>
+                  <div className="text-start">
+                    <div className="text-sm font-bold text-white leading-tight">
+                      {SUPPORTED_LANGUAGES[currentLang].nativeName}
+                    </div>
+                    <div className="text-[10px] text-violet-300">
+                      {SUPPORTED_LANGUAGES[currentLang].name}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 3 Interactive Language Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {(Object.keys(SUPPORTED_LANGUAGES) as SupportedLanguage[]).map((langKey) => {
+              const info = SUPPORTED_LANGUAGES[langKey];
+              const isSelected = currentLang === langKey;
+              return (
+                <button
+                  key={langKey}
+                  type="button"
+                  onClick={() => onUpdateUser({ preferredLanguage: info.name })}
+                  className={`p-5 rounded-3xl border text-start transition-all cursor-pointer relative flex flex-col justify-between group ${
+                    isSelected
+                      ? 'bg-violet-600/20 border-violet-500 text-white shadow-xl shadow-violet-600/20 ring-2 ring-violet-500/50'
+                      : 'bg-[#0f0f18]/90 border-white/[0.08] hover:border-violet-500/40 text-neutral-300 hover:text-white hover:bg-[#141422]'
+                  }`}
+                >
+                  <div>
+                    {/* Top Row: Flag and Active pill / dir */}
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-3xl filter drop-shadow">{info.flag}</span>
+                      {isSelected ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-violet-600 text-white shadow-md shadow-violet-600/40">
+                          <Check className="w-3.5 h-3.5" />
+                          <span>Active</span>
+                        </span>
+                      ) : (
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-white/[0.06] text-neutral-400 group-hover:text-white transition-colors">
+                          {info.dir.toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Language Names */}
+                    <div className="font-display font-bold text-xl text-white tracking-tight">
+                      {info.nativeName}
+                    </div>
+                    <div className="text-xs text-neutral-400 mt-1 flex items-center justify-between">
+                      <span>{info.name}</span>
+                      {info.dir === 'rtl' ? (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                          RTL • اليمين إلى اليسار
+                        </span>
+                      ) : (
+                        <span className="text-[10px] text-neutral-500">
+                          LTR • Left to Right
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Live Localized Sample Quote */}
+                  <div className="mt-5 pt-4 border-t border-white/[0.08] text-xs leading-relaxed text-neutral-300">
+                    <p className="text-[11px] text-neutral-500 uppercase tracking-wider font-semibold mb-1">
+                      Live Sample:
+                    </p>
+                    <p className="italic font-medium">
+                      {langKey === 'en' && '“Stream cinema blockbusters and award-winning series in 4K HDR.”'}
+                      {langKey === 'fr' && '« Diffusez des chefs-d’œuvre du cinéma et des séries primées en 4K HDR. »'}
+                      {langKey === 'ar' && '“شاهد أحدث أفلام السينما والمسلسلات الحائزة على جوائز بدقة 4K فائقة الوضوح.”'}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Secondary Regional & Audio Track Settings */}
+          <div className="rounded-3xl bg-[#0f0f18]/90 border border-white/[0.08] p-6 sm:p-8 space-y-6">
+            <div>
+              <h4 className="font-display text-lg font-bold text-white">Audio & Subtitle Dialect Defaults</h4>
+              <p className="text-xs text-neutral-400 mt-0.5">Configure preferred multi-audio streaming track and subtitle localization.</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-2">
+                <label className="text-xs font-semibold text-neutral-300 block">Preferred Audio Track</label>
+                <select
+                  value={user.preferredLanguage}
+                  onChange={(e) => onUpdateUser({ preferredLanguage: e.target.value })}
+                  className="w-full bg-[#171724] border border-white/[0.12] text-xs text-neutral-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-violet-500 cursor-pointer"
+                >
+                  {(Object.keys(SUPPORTED_LANGUAGES) as SupportedLanguage[]).map((langKey) => {
+                    const info = SUPPORTED_LANGUAGES[langKey];
+                    return (
+                      <option key={langKey} value={info.name}>
+                        {info.flag} {info.nativeName} ({info.name}) [Default 5.1 Surround]
+                      </option>
+                    );
+                  })}
+                  <option value="Spanish (ES)">🇪🇸 Español (Spanish 5.1)</option>
+                  <option value="German (DE)">🇩🇪 Deutsch (German 5.1)</option>
+                  <option value="Japanese (JP)">🇯🇵 日本語 (Original Japanese)</option>
+                </select>
+                <p className="text-[11px] text-neutral-500">Audio will prioritize this track whenever available on movies & TV series.</p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-2">
+                <label className="text-xs font-semibold text-neutral-300 block">Default Subtitles Track</label>
+                <select
+                  value={user.preferredLanguage}
+                  onChange={(e) => onUpdateUser({ preferredLanguage: e.target.value })}
+                  className="w-full bg-[#171724] border border-white/[0.12] text-xs text-neutral-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-violet-500 cursor-pointer"
+                >
+                  {(Object.keys(SUPPORTED_LANGUAGES) as SupportedLanguage[]).map((langKey) => {
+                    const info = SUPPORTED_LANGUAGES[langKey];
+                    return (
+                      <option key={langKey} value={info.name}>
+                        {info.flag} {info.nativeName} ({info.name}) Subtitles [CC]
+                      </option>
+                    );
+                  })}
+                  <option value="Off">Off (Manual subtitle selection)</option>
+                </select>
+                <p className="text-[11px] text-neutral-500">Automatically displays closed captions in this language when dialogue is foreign.</p>
+              </div>
+            </div>
+
+            {/* RTL Layout & Typography Info Card */}
+            <div className="p-4 rounded-2xl bg-violet-950/20 border border-violet-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <div className="p-2 rounded-xl bg-violet-600/20 text-violet-400 shrink-0 mt-0.5">
+                  <Globe className="w-5 h-5" />
+                </div>
+                <div>
+                  <h5 className="text-xs font-bold text-white">Bi-Directional Engine (LTR & RTL)</h5>
+                  <p className="text-xs text-neutral-300 mt-0.5">
+                    When Arabic is selected, the application dynamically mirrors navigation menus, dropdowns, hero overlays, badges, and carousels for natural right-to-left browsing.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-violet-600/30 text-violet-200 border border-violet-500/40">
+                  dir="{SUPPORTED_LANGUAGES[currentLang].dir}"
+                </span>
+              </div>
             </div>
           </div>
         </div>

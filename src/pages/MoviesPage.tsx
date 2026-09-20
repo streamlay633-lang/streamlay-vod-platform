@@ -62,6 +62,7 @@ export const MoviesPage: React.FC<MoviesPageProps> = ({
       {featuredMovie && (
         <HeroBanner
           item={featuredMovie}
+          user={user}
           inMyList={user.myListIds.includes(featuredMovie.id)}
           onToggleMyList={onToggleMyList}
           onPlay={onPlay}
