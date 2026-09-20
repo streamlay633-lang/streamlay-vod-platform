@@ -1,4 +1,159 @@
-import { MediaItem, LiveChannel, UserProfile } from '../types';
+import { MediaItem, LiveChannel, UserProfile, ProfilePictureCategory, TickerPoster } from '../types';
+
+export const ONBOARDING_TICKER_POSTERS: TickerPoster[] = [
+  {
+    id: 'ticker-star-detective-precure',
+    title: 'Star Detective Precure!',
+    type: 'TV Series',
+    posterUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Star%20Detective%20Precure!/Poster/Star%20Detective%20Precure!%20-%20Poster.webp',
+    backdropUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Star%20Detective%20Precure!/Backdrop/Star%20Detective%20Precure!%20-%20Backdrop.webp',
+    badge: 'NEW SERIES',
+    genres: ['Animation', 'Mystery', 'Fantasy'],
+    rating: 9.5,
+    releaseYear: 2026,
+  },
+  {
+    id: 'ticker-platformer-the-show',
+    title: 'Platformer The Show',
+    type: 'TV Series',
+    posterUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Platformer%20The%20Show/Poster/Platformer%20The%20Show%20-%20Poster.png',
+    backdropUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Platformer%20The%20Show/Backdrop/Platformer%20The%20Show%20-%20Backdrop.png',
+    badge: 'ORIGINAL',
+    genres: ['Gaming', 'Adventure', 'Comedy'],
+    rating: 9.0,
+    releaseYear: 2024,
+  },
+  {
+    id: 'ticker-onegai-aipri',
+    title: 'Onegai AiPri',
+    type: 'TV Series',
+    posterUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Onegai%20Aipri/Poster/Onegai%20Aipri%20-%20Poster.jpg',
+    backdropUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Onegai%20Aipri/Backdrop/Onegai%20Aipri%20-%20Backdrop.jpeg',
+    badge: 'NEW RELEASE',
+    genres: ['Idol', 'Music', 'Animation'],
+    rating: 9.3,
+    releaseYear: 2025,
+  },
+  {
+    id: 'ticker-gta-6',
+    title: 'Grand Theft Auto VI: An Extended Look',
+    type: 'Movie',
+    posterUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/Movies/Grand%20Theft%20Auto%20VI:%20An%20Extended%20Look/Poster/Grand%20Theft%20Auto%20VI%20An%20Extended%20Look%20-%20Poster.webp',
+    backdropUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/Movies/Grand%20Theft%20Auto%20VI:%20An%20Extended%20Look/Backdrop/Grand%20Theft%20Auto%20VI%20An%20Extended%20Look%20-%20Backdrop.webp',
+    badge: '4K CINEMA',
+    genres: ['Action', 'Crime', 'Documentary'],
+    rating: 9.9,
+    releaseYear: 2025,
+  },
+  {
+    id: 'ticker-nyanko-days',
+    title: 'Nyanko Days',
+    type: 'TV Series',
+    posterUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Nyanko%20Days/Poster/Nyanko%20Days%20-%20Poster.jpg',
+    backdropUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Nyanko%20Days/Backdrop/Nyanko%20Days%20-%20Backdrop.webp',
+    badge: 'FAN FAVORITE',
+    genres: ['Slice of Life', 'Comedy', 'Animation'],
+    rating: 8.8,
+    releaseYear: 2017,
+  },
+  {
+    id: 'ticker-man-vs-baby',
+    title: 'Man vs Baby',
+    type: 'TV Series',
+    posterUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Man%20vs%20Baby/Poster/Man%20vs%20Baby%20-%20Poster.jpg',
+    backdropUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Man%20vs%20Baby/Backdrop/Man%20vs%20Baby%20-%20Backdrop.jpg',
+    badge: 'TRENDING',
+    genres: ['Comedy', 'Family'],
+    rating: 8.9,
+    releaseYear: 2025,
+  },
+  {
+    id: 'ticker-himitsu-no-aipri',
+    title: 'Himitsu no AiPri',
+    type: 'TV Series',
+    posterUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Himitsu%20no%20AiPri/Poster/Himitsu%20no%20AiPri%20-%20Poster.webp',
+    backdropUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Himitsu%20no%20AiPri/Backdrop/Himitsu%20no%20AiPri%20-%20Backdrop.jpg',
+    badge: 'TOP RATED',
+    genres: ['Animation', 'Music', 'Fantasy'],
+    rating: 9.2,
+    releaseYear: 2024,
+  }
+];
+
+export const PROFILE_PICTURE_CATEGORIES: ProfilePictureCategory[] = [
+  {
+    category: 'Onegai AiPri',
+    description: 'Official idols and characters from Onegai AiPri',
+    items: [
+      {
+        id: 'pfp-aoi-yumemiya',
+        name: 'Aoi Yumemiya',
+        url: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/Profile%20Pictures/Onegai%20Aipri/Aoi%20Yumemiya.png',
+        category: 'Onegai AiPri'
+      },
+      {
+        id: 'pfp-ema-mochinaga',
+        name: 'Ema Mochinaga',
+        url: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/Profile%20Pictures/Onegai%20Aipri/Ema%20Mochinaga.png',
+        category: 'Onegai AiPri'
+      },
+      {
+        id: 'pfp-gumi-tomosaka',
+        name: 'Gumi Tomosaka',
+        url: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/Profile%20Pictures/Onegai%20Aipri/Gumi%20Tomosaka.png',
+        category: 'Onegai AiPri'
+      },
+      {
+        id: 'pfp-inori-konomi',
+        name: 'Inori Konomi',
+        url: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/Profile%20Pictures/Onegai%20Aipri/Inori%20Konomi.png',
+        category: 'Onegai AiPri'
+      },
+      {
+        id: 'pfp-nana-atami',
+        name: 'Nana Atami',
+        url: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/Profile%20Pictures/Onegai%20Aipri/Nana%20Atami.png',
+        category: 'Onegai AiPri'
+      },
+      {
+        id: 'pfp-olivia-yuki',
+        name: 'Olivia Yuki',
+        url: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/Profile%20Pictures/Onegai%20Aipri/Olivia%20Yuki.png',
+        category: 'Onegai AiPri'
+      }
+    ]
+  },
+  {
+    category: 'Classic Avatars',
+    description: 'StreamLay aesthetic portrait avatars',
+    items: [
+      {
+        id: 'pfp-classic-1',
+        name: 'Violet Chic',
+        url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80',
+        category: 'Classic Avatars'
+      },
+      {
+        id: 'pfp-classic-2',
+        name: 'Urban Chill',
+        url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80',
+        category: 'Classic Avatars'
+      },
+      {
+        id: 'pfp-classic-3',
+        name: 'Studio Neon',
+        url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80',
+        category: 'Classic Avatars'
+      },
+      {
+        id: 'pfp-classic-4',
+        name: 'Golden Radiance',
+        url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80',
+        category: 'Classic Avatars'
+      }
+    ]
+  }
+];
 
 export const INITIAL_USER: UserProfile = {
   name: '',
@@ -14,6 +169,14 @@ export const INITIAL_USER: UserProfile = {
   myListIds: [],
   watchHistory: [],
   favoriteIds: [],
+  parentalControlsEnabled: false,
+  parentalPin: '',
+  parentalControls: {
+    isEnabled: false,
+    pin: '',
+    restrictionLevel: 'TV-MA / R / M',
+    restrictPurchases: false,
+  },
 };
 
 export const MOCK_MEDIA: MediaItem[] = [
@@ -95,6 +258,247 @@ export const MOCK_MEDIA: MediaItem[] = [
     ]
   },
   {
+    id: 'ser-onegai-aipri',
+    title: 'Onegai AiPri',
+    type: 'series',
+    tagline: 'Make a wish with the Mirror Pact and sparkle on the AiPri Verse stage!',
+    description: 'Inori Konomi moves to Onegai Town with a deep love for the virtual idols of AiPri Verse. After encountering popular idol Aoi Yumemiya and the magical wish plushie Fortu, Inori receives the mystical Mirror Pact to debut on the idol stage. Together as the Wish-Fulfilling Squad, they perform heartwarming live shows to grant the townspeople’s wishes.',
+    backdropUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Onegai%20Aipri/Backdrop/Onegai%20Aipri%20-%20Backdrop.jpeg',
+    posterUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Onegai%20Aipri/Poster/Onegai%20Aipri%20-%20Poster.jpg',
+    logoUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Onegai%20Aipri/Logo/Onegai%20Aipri%20-%20Logo.webp',
+    rating: 9.3,
+    releaseYear: 2026,
+    seasonsCount: 1,
+    genres: ['Animation', 'Music', 'Comedy', 'Fantasy'],
+    ageRating: 'TV-PG',
+    isTrending: true,
+    isPopular: true,
+    isNewRelease: true,
+    isTopRated: true,
+    isFeatured: true,
+    director: 'Junichi Fujisaku & Masahiro Matsunaga',
+    cast: [
+      { name: 'Hanaka Ogawa', role: 'Inori Konomi (Voice)', photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Rika Kanaya', role: 'Aoi Yumemiya (Voice)', photoUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Yo Taichi', role: 'Fortu (Voice)', photoUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80' }
+    ],
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    trailerUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    seasons: [
+      {
+        seasonNumber: 1,
+        title: 'Season 1: Wish-Fulfilling Squad',
+        episodes: [
+          {
+            id: 'ep-onegai-1',
+            episodeNumber: 1,
+            seasonNumber: 1,
+            title: 'Please Grant My Wish! AiPri Debut',
+            duration: '24m',
+            description: 'Inori moves to Onegai Town and meets Aoi Yumemiya and Fortu, unlocking her new stage with the sacred Mirror Pact.',
+            thumbnail: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Onegai%20Aipri/Backdrop/Onegai%20Aipri%20-%20Backdrop.jpeg',
+            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'ser-platformer-the-show',
+    title: 'Platformer The Show',
+    type: 'series',
+    tagline: 'Level up, dodge the obstacles, and master the digital stage.',
+    description: 'An action-packed animated gaming adventure set across vibrant retro worlds and intricate platforming challenges. Follow agile heroes running, leaping, and solving intricate level mechanics while uncovering secrets across dynamic game dimensions.',
+    backdropUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Platformer%20The%20Show/Backdrop/Platformer%20The%20Show%20-%20Backdrop.png',
+    posterUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Platformer%20The%20Show/Poster/Platformer%20The%20Show%20-%20Poster.png',
+    logoUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Platformer%20The%20Show/Logo/Platformer%20The%20Show%20-%20Logo.png',
+    rating: 9.4,
+    releaseYear: 2025,
+    seasonsCount: 1,
+    genres: ['Animation', 'Action', 'Adventure', 'Comedy'],
+    ageRating: 'TV-PG',
+    isTrending: true,
+    isPopular: true,
+    isNewRelease: true,
+    isTopRated: true,
+    isFeatured: true,
+    director: 'Studio Platformer',
+    cast: [
+      { name: 'Alex Knight', role: 'Hero Runner', photoUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Maya Speed', role: 'Acrobat Dash', photoUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Pixel Commander', role: 'Level Guide', photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80' }
+    ],
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    trailerUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    seasons: [
+      {
+        seasonNumber: 1,
+        title: 'Season 1: World 1-1',
+        episodes: [
+          {
+            id: 'ep-plat-1',
+            episodeNumber: 1,
+            seasonNumber: 1,
+            title: 'World 1-1: Press Start',
+            duration: '22m',
+            description: 'The adventurers jump into the first challenging sector, learning the rules of the terrain while avoiding spike traps and tricky moving platforms.',
+            thumbnail: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Platformer%20The%20Show/Backdrop/Platformer%20The%20Show%20-%20Backdrop.png',
+            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'ser-star-detective-precure',
+    title: 'Star Detective Precure!',
+    type: 'series',
+    tagline: 'Unravel the truth, solve the mystery, and shine across time!',
+    description: 'Transported from 2027 back to 1999 by the time-space fairy Pochitan, Anna Akechi teams up with aspiring detective Mikuru Kobayashi. Together as Cure Answer and Cure Mystique of the CUREtto Detective Agency, they combine sharp deduction, heart, and magical power to solve perplexing cases and stop phantom thieves who steal precious memories.',
+    backdropUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Star%20Detective%20Precure!/Backdrop/Star%20Detective%20Precure!%20-%20Backdrop.webp',
+    posterUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Star%20Detective%20Precure!/Poster/Star%20Detective%20Precure!%20-%20Poster.webp',
+    logoUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Star%20Detective%20Precure!/Logo/Star%20Detective%20Precure!%20-%20Logo.webp',
+    rating: 9.5,
+    releaseYear: 2026,
+    seasonsCount: 1,
+    genres: ['Animation', 'Mystery', 'Fantasy', 'Action'],
+    ageRating: 'TV-PG',
+    isTrending: true,
+    isPopular: true,
+    isNewRelease: true,
+    isTopRated: true,
+    isFeatured: true,
+    director: 'Toei Animation',
+    cast: [
+      { name: 'Anna Akechi', role: 'Cure Answer (Voice)', photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Mikuru Kobayashi', role: 'Cure Mystique (Voice)', photoUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Luluka Moria', role: 'Cure Arcana Shadow (Voice)', photoUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80' }
+    ],
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    trailerUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    seasons: [
+      {
+        seasonNumber: 1,
+        title: 'Season 1: CUREtto Detective Agency',
+        episodes: [
+          {
+            id: 'ep-precure-1',
+            episodeNumber: 1,
+            seasonNumber: 1,
+            title: 'Case 1: Time Leap to 1999! Cure Answer is Born',
+            duration: '24m',
+            description: 'On Anna’s 14th birthday, a magical clock pendant transports her back to 1999 where she meets detective Mikuru and awakens her true detective powers.',
+            thumbnail: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Star%20Detective%20Precure!/Backdrop/Star%20Detective%20Precure!%20-%20Backdrop.webp',
+            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'ser-man-vs-baby',
+    title: 'Man vs Baby',
+    type: 'series',
+    tagline: 'New job. Luxury penthouse. One tiny, unpredictable adversary.',
+    description: 'Following the events of Man vs Bee, Trevor Bingley takes on a lucrative housesitting assignment at a high-tech London penthouse over the Christmas holidays. His plans for an easy paycheck dissolve into sheer slapstick chaos when an unexpected infant enters the picture, leading to an escalating battle of wits and catastrophic accidents.',
+    backdropUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Man%20vs%20Baby/Backdrop/Man%20vs%20Baby%20-%20Backdrop.jpg',
+    posterUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Man%20vs%20Baby/Poster/Man%20vs%20Baby%20-%20Poster.jpg',
+    logoUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Man%20vs%20Baby/Logo/Man%20vs%20Baby%20-%20Logo.webp',
+    rating: 8.9,
+    releaseYear: 2025,
+    seasonsCount: 1,
+    genres: ['Comedy', 'Family'],
+    ageRating: 'TV-PG',
+    isTrending: true,
+    isPopular: true,
+    isNewRelease: true,
+    isTopRated: false,
+    isFeatured: true,
+    director: 'David Kerr',
+    cast: [
+      { name: 'Rowan Atkinson', role: 'Trevor Bingley', photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Jing Lusi', role: 'Nina', photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Julian Rhind-Tutt', role: 'Christian', photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80' }
+    ],
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    trailerUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    seasons: [
+      {
+        seasonNumber: 1,
+        title: 'Season 1: Penthouse Pandemonium',
+        episodes: [
+          {
+            id: 'ep-mvb-1',
+            episodeNumber: 1,
+            seasonNumber: 1,
+            title: 'Episode 1: The New Arrival',
+            duration: '28m',
+            description: 'Trevor arrives at an ultramodern penthouse for Christmas housesitting, but an unexpected infant guest turns his high-tech dream into slapstick disaster.',
+            thumbnail: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Man%20vs%20Baby/Backdrop/Man%20vs%20Baby%20-%20Backdrop.jpg',
+            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+          },
+          {
+            id: 'ep-mvb-2',
+            episodeNumber: 2,
+            seasonNumber: 1,
+            title: 'Episode 2: Smart House Sabotage',
+            duration: '29m',
+            description: 'Trevor attempts to navigate smart nursery tech and bottle warming, accidentally triggering high-tech penthouse lockdown alarms.',
+            thumbnail: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Man%20vs%20Baby/Backdrop/Man%20vs%20Baby%20-%20Backdrop.jpg',
+            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'ser-nyanko-days',
+    title: 'Nyanko Days',
+    type: 'series',
+    tagline: 'Every day is filled with fluffy, tiny cat companions!',
+    description: 'Yuuko Konagai is a shy high school freshman who finds it difficult to talk to her classmates. However, returning home is pure joy thanks to her three adorable, palm-sized anthropomorphic kittens: the mischievous munchkin Maa, the gentle and smart Russian Blue Rou, and the timid Singapore cat Shii. Together, they bring warmth, laughs, and new friendships to Yuuko’s daily life.',
+    backdropUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Nyanko%20Days/Backdrop/Nyanko%20Days%20-%20Backdrop.webp',
+    posterUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Nyanko%20Days/Poster/Nyanko%20Days%20-%20Poster.jpg',
+    logoUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Nyanko%20Days/Logo/Nyanko%20Days%20-%20Logo.png',
+    rating: 8.8,
+    releaseYear: 2017,
+    seasonsCount: 1,
+    genres: ['Animation', 'Comedy', 'Slice of Life'],
+    ageRating: 'TV-G',
+    isTrending: true,
+    isPopular: true,
+    isNewRelease: false,
+    isTopRated: true,
+    isFeatured: true,
+    director: 'Yoshimasa Hiraike',
+    cast: [
+      { name: 'Akari Uehara', role: 'Yuuko Konagai (Voice)', photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Ibuki Kido', role: 'Maa (Voice)', photoUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Erii Yamazaki', role: 'Shii (Voice)', photoUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80' },
+      { name: 'Mikako Komatsu', role: 'Rou (Voice)', photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80' }
+    ],
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    trailerUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    seasons: [
+      {
+        seasonNumber: 1,
+        title: 'Season 1: Me and My Cute Kittens',
+        episodes: [
+          {
+            id: 'ep-nyanko-1',
+            episodeNumber: 1,
+            seasonNumber: 1,
+            title: 'Episode 1: My Cats and Me',
+            duration: '3m',
+            description: 'Yuuko rushes home after a quiet day at school to be greeted by her three energetic and loving cat companions: Maa, Shii, and Rou.',
+            thumbnail: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Nyanko%20Days/Backdrop/Nyanko%20Days%20-%20Backdrop.webp',
+            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+          }
+        ]
+      }
+    ]
+  },
+  {
     id: 'mov-gta6',
     title: 'Grand Theft Auto VI: An Extended Look',
     type: 'movie',
@@ -150,257 +554,6 @@ export const MOCK_LIVE_CHANNELS: LiveChannel[] = [
     },
     upcomingPrograms: [
       { id: 'prg-dz-1-2', title: 'Late Night Cinema Classic', startTime: '21:00', endTime: '23:00', durationMinutes: 120, description: 'Golden age Arab cinema masterpiece.', rating: 'TV-PG', category: 'Movie' }
-    ]
-  },
-  {
-    id: 'ch-dz-2',
-    number: 2,
-    name: 'Amou Yazid TV',
-    category: 'Kids',
-    groupTitle: 'Algeria',
-    country: 'Algeria',
-    logo: 'https://i.imgur.com/BRLQ6kC.png',
-    badge: 'FAMILY',
-    viewers: '480K watching',
-    streamUrl: 'http://mkstream.servehttp.com:1940/AmouYazid/ay1/playlist.m3u8',
-    previewImage: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1200&auto=format&fit=crop&q=80',
-    currentProgram: {
-      id: 'prg-dz-2',
-      title: 'Amou Yazid Kids Club & Storytime',
-      startTime: '18:30',
-      endTime: '20:30',
-      durationMinutes: 120,
-      description: 'Educational animations, puppet songs, and creative arts for children and families across Algeria.',
-      rating: 'TV-Y',
-      category: 'Kids',
-    },
-    upcomingPrograms: [
-      { id: 'prg-dz-2-2', title: 'Adventures of the Little Inventors', startTime: '20:30', endTime: '21:15', durationMinutes: 45, description: 'Fun science experiments for young minds.', rating: 'TV-Y', category: 'Educational' }
-    ]
-  },
-  {
-    id: 'ch-dz-3',
-    number: 3,
-    name: 'El Heddaf TV',
-    category: 'Sports',
-    groupTitle: 'Algeria',
-    country: 'Algeria',
-    logo: 'https://i.imgur.com/Bs9Flki.png',
-    badge: 'HD LIVE',
-    viewers: '890K watching',
-    streamUrl: 'https://live.elheddaftv.com:8081/elheddaftv/index.m3u8',
-    previewImage: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1200&auto=format&fit=crop&q=80',
-    currentProgram: {
-      id: 'prg-dz-3',
-      title: 'Bilmakchouf - Football Special Live',
-      startTime: '19:30',
-      endTime: '21:30',
-      durationMinutes: 120,
-      description: 'Premier Algerian Ligue 1 discussion, tactical debate, national team analysis, and transfer news.',
-      rating: 'TV-PG',
-      category: 'Sports Talk',
-    },
-    upcomingPrograms: [
-      { id: 'prg-dz-3-2', title: 'European Champions League Recap', startTime: '21:30', endTime: '22:30', durationMinutes: 60, description: 'All the goals and key moments with sports pundits.', rating: 'TV-G', category: 'Football' }
-    ]
-  },
-  {
-    id: 'ch-dz-4',
-    number: 4,
-    name: 'AL24 NEWS',
-    category: 'News',
-    groupTitle: 'Algeria',
-    country: 'Algeria',
-    logo: 'https://i.imgur.com/Z9gsSDq.png',
-    badge: '24/7 LIVE',
-    viewers: '650K watching',
-    streamUrl: 'https://cdn.live.easybroadcast.io/abr_corp/66_al24_u4yga6h/corp/66_al24_u4yga6h_240p/chunks.m3u8',
-    previewImage: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&auto=format&fit=crop&q=80',
-    currentProgram: {
-      id: 'prg-dz-4',
-      title: 'AL24 NewsHour - Maghreb & World Bulletin',
-      startTime: '19:00',
-      endTime: '20:00',
-      durationMinutes: 60,
-      description: 'Continuous international and regional news coverage, diplomatic summits, and geopolitical reports.',
-      rating: 'TV-G',
-      category: 'World News',
-    },
-    upcomingPrograms: [
-      { id: 'prg-dz-4-2', title: 'Focus Africa & Mediterranean Dialogue', startTime: '20:00', endTime: '21:00', durationMinutes: 60, description: 'In-depth investigative reports across the African continent.', rating: 'TV-PG', category: 'Current Affairs' }
-    ]
-  },
-  {
-    id: 'ch-dz-5',
-    number: 5,
-    name: 'CNA (Canal Algérie)',
-    category: 'News',
-    groupTitle: 'Algeria',
-    country: 'Algeria',
-    logo: 'https://i.imgur.com/cKPRVB1.png',
-    badge: 'SATELLITE',
-    viewers: '520K watching',
-    streamUrl: 'https://live.creacast.com/cna/stream/playlist.m3u8',
-    previewImage: 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=1200&auto=format&fit=crop&q=80',
-    currentProgram: {
-      id: 'prg-dz-5',
-      title: 'Le Journal Télévisé & Débat',
-      startTime: '20:00',
-      endTime: '21:30',
-      durationMinutes: 90,
-      description: 'National evening news bulletin in French and Arabic, government briefings, and cultural magazine.',
-      rating: 'TV-G',
-      category: 'National News',
-    },
-    upcomingPrograms: [
-      { id: 'prg-dz-5-2', title: 'Regards sur l\'Algérie: Sahara & Oasis', startTime: '21:30', endTime: '22:30', durationMinutes: 60, description: 'Expedition across the grand dunes and Tassili n\'Ajjer.', rating: 'TV-G', category: 'Documentary' }
-    ]
-  },
-  {
-    id: 'ch-1',
-    number: 101,
-    name: 'Pulse News 24/7',
-    category: 'News',
-    logo: '🔴',
-    badge: '4K LIVE',
-    viewers: '1.2M watching',
-    streamUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
-    previewImage: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&auto=format&fit=crop&q=80',
-    currentProgram: {
-      id: 'prg-1',
-      title: 'Global Prime: The Evening Briefing',
-      startTime: '19:00',
-      endTime: '20:00',
-      durationMinutes: 60,
-      description: 'Comprehensive live global coverage of international diplomacy, markets, climate technology, and breaking bulletins.',
-      rating: 'TV-G',
-      category: 'News',
-    },
-    upcomingPrograms: [
-      { id: 'prg-1-2', title: 'Silicon Frontier Analysis', startTime: '20:00', endTime: '20:30', durationMinutes: 30, description: 'Deep dive into emerging neuro-tech hardware announcements.', rating: 'TV-PG', category: 'Tech' },
-      { id: 'prg-1-3', title: 'World Financial Markets Close', startTime: '20:30', endTime: '21:00', durationMinutes: 30, description: 'Asian market opening bell analysis and currency insights.', rating: 'TV-G', category: 'Finance' },
-      { id: 'prg-1-4', title: 'Nightline Investigation', startTime: '21:00', endTime: '22:00', durationMinutes: 60, description: 'Investigative reporting into offshore cloud server farms.', rating: 'TV-14', category: 'Documentary' }
-    ]
-  },
-  {
-    id: 'ch-2',
-    number: 204,
-    name: 'Velocity Sports Ultra',
-    category: 'Sports',
-    logo: '⚡',
-    badge: 'HDR LIVE',
-    viewers: '3.4M watching',
-    streamUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
-    previewImage: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1200&auto=format&fit=crop&q=80',
-    currentProgram: {
-      id: 'prg-2',
-      title: 'Monaco Grand Prix: Qualifying Session 3',
-      startTime: '19:15',
-      endTime: '20:45',
-      durationMinutes: 90,
-      description: 'Live pole position shootouts through the famous harbor chicane and swimming pool turns.',
-      rating: 'TV-G',
-      category: 'Motorsport',
-    },
-    upcomingPrograms: [
-      { id: 'prg-2-2', title: 'Paddock Post-Qualifying Analysis', startTime: '20:45', endTime: '21:30', durationMinutes: 45, description: 'Driver interviews and telemetry telemetry review.', rating: 'TV-G', category: 'Motorsport' },
-      { id: 'prg-2-3', title: 'World Superbike Highlights', startTime: '21:30', endTime: '22:30', durationMinutes: 60, description: 'Round 7 race highlights from Silverstone.', rating: 'TV-PG', category: 'Racing' }
-    ]
-  },
-  {
-    id: 'ch-3',
-    number: 305,
-    name: 'CineMax Premiere HD',
-    category: 'Movies',
-    logo: '🎬',
-    badge: 'DOLBY 5.1',
-    viewers: '850K watching',
-    streamUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
-    previewImage: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1200&auto=format&fit=crop&q=80',
-    currentProgram: {
-      id: 'prg-3',
-      title: 'Interstellar Odyssey: Director’s Cut',
-      startTime: '18:30',
-      endTime: '21:00',
-      durationMinutes: 150,
-      description: 'A journey across wormholes to discover hospitable celestial bodies before Earth collapses.',
-      rating: 'PG-13',
-      category: 'Sci-Fi Movie',
-    },
-    upcomingPrograms: [
-      { id: 'prg-3-2', title: 'The Shadow of Dublin', startTime: '21:00', endTime: '23:00', durationMinutes: 120, description: 'Award-winning neo-noir thriller set in foggy Ireland.', rating: 'R', category: 'Thriller' }
-    ]
-  },
-  {
-    id: 'ch-4',
-    number: 402,
-    name: 'Discovery Earth & Cosmos',
-    category: 'Entertainment',
-    logo: '🌍',
-    badge: '4K UHD',
-    viewers: '620K watching',
-    streamUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-    previewImage: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&auto=format&fit=crop&q=80',
-    currentProgram: {
-      id: 'prg-4',
-      title: 'Wonders of the Mariana Trench',
-      startTime: '19:30',
-      endTime: '20:30',
-      durationMinutes: 60,
-      description: 'Ultra-HD expedition submersible diving to the Challenger Deep, showcasing rare abyssal creatures.',
-      rating: 'TV-G',
-      category: 'Science',
-    },
-    upcomingPrograms: [
-      { id: 'prg-4-2', title: 'Aurora Borealis: Polar Lights in 8K', startTime: '20:30', endTime: '21:30', durationMinutes: 60, description: 'Spectacular time-lapses from northern Norway and Svalbard.', rating: 'TV-G', category: 'Nature' }
-    ]
-  },
-  {
-    id: 'ch-5',
-    number: 508,
-    name: 'Neon Beats Live',
-    category: 'Music',
-    logo: '🎧',
-    badge: 'ATMOS',
-    viewers: '410K watching',
-    streamUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-    previewImage: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1200&auto=format&fit=crop&q=80',
-    currentProgram: {
-      id: 'prg-5',
-      title: 'Electronic Horizon: Berlin Underground Set',
-      startTime: '19:00',
-      endTime: '21:00',
-      durationMinutes: 120,
-      description: 'Live DJ set streaming from an industrial warehouse in Kreuzberg with spatial audio.',
-      rating: 'TV-14',
-      category: 'Live Concert',
-    },
-    upcomingPrograms: [
-      { id: 'prg-5-2', title: 'Synthwave Night Drive Session', startTime: '21:00', endTime: '23:00', durationMinutes: 120, description: 'Retro 80s futuristic electronic ambient jams with Tokyo night footage.', rating: 'TV-PG', category: 'Music' }
-    ]
-  },
-  {
-    id: 'ch-6',
-    number: 601,
-    name: 'ToonVerse Junior & Family',
-    category: 'Kids',
-    logo: '🚀',
-    badge: 'FAMILY',
-    viewers: '980K watching',
-    streamUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-    previewImage: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1200&auto=format&fit=crop&q=80',
-    currentProgram: {
-      id: 'prg-6',
-      title: 'The Starlight Explorers Club',
-      startTime: '19:00',
-      endTime: '19:45',
-      durationMinutes: 45,
-      description: 'Friendly alien robotic explorers chart colorful nebulas and solve friendly cosmic puzzles.',
-      rating: 'TV-Y',
-      category: 'Animation',
-    },
-    upcomingPrograms: [
-      { id: 'prg-6-2', title: 'Forest Animals Mystery Island', startTime: '19:45', endTime: '20:30', durationMinutes: 45, description: 'Clever woodland critters build treehouses and find hidden treasures.', rating: 'TV-Y7', category: 'Animation' }
     ]
   }
 ];

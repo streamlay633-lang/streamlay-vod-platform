@@ -99,6 +99,18 @@ export interface UserProfile {
     progressPercentage: number;
   }[];
   favoriteIds: string[];
+  parentalPin?: string;
+  parentalControlsEnabled?: boolean;
+  parentalControls?: ParentalControlsConfig;
+}
+
+export type ParentalRestrictionLevel = 'TV-MA / R / M' | 'TV-14 / PG-13' | 'All Content';
+
+export interface ParentalControlsConfig {
+  isEnabled: boolean;
+  pin: string; // 4-digit PIN
+  restrictionLevel: ParentalRestrictionLevel;
+  restrictPurchases?: boolean;
 }
 
 export type AppPage =
@@ -117,4 +129,29 @@ export interface ToastMessage {
   title: string;
   message?: string;
   type?: 'success' | 'info' | 'warning';
+}
+
+export interface ProfilePictureItem {
+  id: string;
+  name: string;
+  url: string;
+  category: string;
+}
+
+export interface ProfilePictureCategory {
+  category: string;
+  description?: string;
+  items: ProfilePictureItem[];
+}
+
+export interface TickerPoster {
+  id: string;
+  title: string;
+  type: 'TV Series' | 'Movie';
+  posterUrl: string;
+  backdropUrl?: string;
+  badge?: string;
+  genres: string[];
+  rating: number;
+  releaseYear: number;
 }

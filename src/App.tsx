@@ -20,10 +20,30 @@ import { SearchPage } from './pages/SearchPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { DetailsPage } from './pages/DetailsPage';
 import { VideoPlayerPage } from './pages/VideoPlayerPage';
-import { Play, Sparkles, Tv, Shield, Heart } from 'lucide-react';
+import { PinInput } from './components/PinInput';
+import { Play, Sparkles, Tv, Shield, Heart, Lock, ShieldAlert } from 'lucide-react';
 
 const STORAGE_USER_KEY = 'streamlay_user_profile';
 const STORAGE_PAGE_KEY = 'streamlay_current_page';
+
+// Helper to check whether an item is restricted by current user's parental controls
+const isMediaRestricted = (media: MediaItem, user: UserProfile): boolean => {
+  const isEnabled = user.parentalControlsEnabled ?? user.parentalControls?.isEnabled;
+  const pin = user.parentalPin || user.parentalControls?.pin;
+  if (!isEnabled || !pin) return false;
+
+  const level = user.parentalControls?.restrictionLevel || 'TV-MA / R / M';
+  const rating = (media.ageRating || '').toUpperCase();
+
+  if (level === 'All Content') {
+    return true;
+  }
+  if (level === 'TV-14 / PG-13') {
+    return ['TV-MA', 'R', 'M', 'TV-14', 'PG-13', 'NC-17'].some((r) => rating.includes(r));
+  }
+  // Standard 'TV-MA / R / M'
+  return ['TV-MA', 'R', 'M', 'NC-17'].some((r) => rating.includes(r));
+};
 
 export default function App() {
   // Load initial user from localStorage if present
@@ -130,8 +150,17 @@ export default function App() {
     setUser((prev) => ({ ...prev, myListIds: updatedListIds }));
   };
 
-  // Play video
-  const handlePlay = (item: MediaItem, episode?: Episode) => {
+  // Parental gate challenge state for playing sensitive titles
+  const [parentalGateTarget, setParentalGateTarget] = useState<{
+    item: MediaItem;
+    episode?: Episode;
+  } | null>(null);
+  const [parentalGatePin, setParentalGatePin] = useState('');
+  const [parentalGateError, setParentalGateError] = useState('');
+  const [unlockedMediaIds, setUnlockedMediaIds] = useState<string[]>([]);
+
+  // Start playback routine
+  const startPlayback = (item: MediaItem, episode?: Episode) => {
     setSelectedMedia(item);
     setSelectedEpisode(episode);
     setCurrentPage('player');
@@ -152,6 +181,34 @@ export default function App() {
         ],
       };
     });
+  };
+
+  // Play video with parental control verification
+  const handlePlay = (item: MediaItem, episode?: Episode) => {
+    // Check if item is restricted and not yet unlocked in current session
+    if (isMediaRestricted(item, user) && !unlockedMediaIds.includes(item.id)) {
+      setParentalGateTarget({ item, episode });
+      setParentalGatePin('');
+      setParentalGateError('');
+      return;
+    }
+
+    startPlayback(item, episode);
+  };
+
+  // Verify PIN entered in playback parental gate
+  const handleVerifyParentalGate = () => {
+    const correctPin = user.parentalPin || user.parentalControls?.pin;
+    if (!correctPin || parentalGatePin === correctPin) {
+      if (parentalGateTarget) {
+        setUnlockedMediaIds((prev) => [...prev, parentalGateTarget.item.id]);
+        startPlayback(parentalGateTarget.item, parentalGateTarget.episode);
+        setParentalGateTarget(null);
+        addToast('Content Unlocked', `Parental PIN verified for "${parentalGateTarget.item.title}".`, 'success');
+      }
+    } else {
+      setParentalGateError('Incorrect 4-digit PIN. Please try again.');
+    }
   };
 
   // Update dynamic watch progress from active player
@@ -205,8 +262,12 @@ export default function App() {
   };
 
   // Complete onboarding
-  const handleCompleteOnboarding = (name: string) => {
-    setUser((prev) => ({ ...prev, name }));
+  const handleCompleteOnboarding = (name: string, avatarUrl?: string) => {
+    setUser((prev) => ({
+      ...prev,
+      name,
+      ...(avatarUrl ? { avatarUrl } : {}),
+    }));
     setCurrentPage('home');
     addToast(`Welcome to StreamLay, ${name}!`, 'Your ultra-cinematic 4K streaming journey begins now.');
   };
@@ -269,6 +330,7 @@ export default function App() {
           <OnboardingPage
             onComplete={handleCompleteOnboarding}
             initialName={user.name}
+            initialAvatar={user.avatarUrl}
           />
         )}
 
@@ -453,6 +515,67 @@ export default function App() {
             </div>
           </div>
         </footer>
+      )}
+
+      {/* Parental Gate Modal for Sensitive Playback */}
+      {parentalGateTarget && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-[#12121e] rounded-3xl border border-white/10 p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-6 text-center">
+            <div className="w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 mx-auto">
+              <Lock className="w-7 h-7" />
+            </div>
+
+            <div>
+              <span className="px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase bg-red-500/20 text-red-300 border border-red-500/30">
+                {parentalGateTarget.item.ageRating || 'RATED M'} • Sensitive Content
+              </span>
+              <h3 className="font-display text-xl font-bold text-white mt-2">
+                Parental PIN Required
+              </h3>
+              <p className="text-xs text-neutral-300 mt-1">
+                Access to <span className="font-semibold text-white">"{parentalGateTarget.item.title}"</span> is restricted by parental controls. Enter your 4-digit profile PIN to continue.
+              </p>
+            </div>
+
+            <div className="py-2">
+              <PinInput
+                idPrefix="gate-pin"
+                value={parentalGatePin}
+                onChange={(val) => {
+                  setParentalGatePin(val);
+                  setParentalGateError('');
+                }}
+                isMasked={true}
+                autoFocus={true}
+                hasError={Boolean(parentalGateError)}
+              />
+            </div>
+
+            {parentalGateError && (
+              <div className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 p-2.5 rounded-xl">
+                {parentalGateError}
+              </div>
+            )}
+
+            <div className="flex items-center justify-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setParentalGateTarget(null)}
+                className="px-4 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-neutral-300 text-xs font-semibold cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={parentalGatePin.length !== 4}
+                onClick={handleVerifyParentalGate}
+                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-violet-600 hover:from-amber-500 hover:to-violet-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-bold transition-all shadow-lg shadow-amber-600/20 cursor-pointer"
+              >
+                Unlock & Play
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

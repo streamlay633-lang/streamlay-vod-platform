@@ -36,7 +36,14 @@ export const LiveTvPage: React.FC<LiveTvPageProps> = () => {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          const removedIds = new Set([
+            'ch-dz-2', 'ch-dz-3', 'ch-dz-4', 'ch-dz-5',
+            'ch-1', 'ch-2', 'ch-3', 'ch-4', 'ch-5', 'ch-6'
+          ]);
+          const cleaned = parsed.filter((c: LiveChannel) => !removedIds.has(c.id));
+          if (cleaned.length > 0) {
+            return cleaned;
+          }
         }
       }
     } catch (e) {}
@@ -58,8 +65,16 @@ export const LiveTvPage: React.FC<LiveTvPageProps> = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
 
-  // Categories list with Algeria highlighted
-  const categories = ['All', 'Algeria', 'News', 'Sports', 'Kids', 'Entertainment', 'Movies', 'Music'];
+  // Categories list derived dynamically from active channels
+  const categories = ['All', ...Array.from(new Set(
+    channels.flatMap((c) => [c.country === 'Algeria' ? 'Algeria' : null, c.category].filter(Boolean) as string[])
+  ))];
+
+  useEffect(() => {
+    if (!categories.includes(selectedCategory)) {
+      setSelectedCategory('All');
+    }
+  }, [categories, selectedCategory]);
 
   // Filter channels
   const filteredChannels = channels.filter((c) => {
@@ -510,7 +525,7 @@ export const LiveTvPage: React.FC<LiveTvPageProps> = () => {
               Electronic Program Guide (EPG)
             </h3>
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-white/[0.06] text-neutral-400">
-              {filteredChannels.length} channels
+              {filteredChannels.length} {filteredChannels.length === 1 ? 'channel' : 'channels'}
             </span>
           </div>
           <span className="text-xs text-neutral-400">Click any channel row to tune in live</span>
