@@ -22,14 +22,19 @@ import {
 import { LiveChannel, LiveProgram } from '../types';
 import { MOCK_LIVE_CHANNELS } from '../data/mockData';
 import { parseM3U } from '../utils/m3uParser';
+import { getTranslation } from '../utils/translations';
 
 const STORAGE_CUSTOM_CHANNELS_KEY = 'streamlay_custom_channels';
 
 interface LiveTvPageProps {
   onPlayFullscreen?: (channel: LiveChannel) => void;
+  lang?: string;
 }
 
-export const LiveTvPage: React.FC<LiveTvPageProps> = () => {
+export const LiveTvPage: React.FC<LiveTvPageProps> = ({ onPlayFullscreen, lang }) => {
+  const activeLang = lang || (typeof document !== 'undefined' ? document.documentElement.lang : 'en');
+  const t = (key: Parameters<typeof getTranslation>[0]) => getTranslation(key, activeLang);
+
   const [channels, setChannels] = useState<LiveChannel[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_CUSTOM_CHANNELS_KEY);
@@ -258,18 +263,18 @@ export const LiveTvPage: React.FC<LiveTvPageProps> = () => {
         <div>
           <div className="flex items-center gap-2.5">
             <h1 className="font-display text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Live TV Guide
+              {t('liveTvGuide')}
             </h1>
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-600/20 text-red-400 border border-red-500/30">
               <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-              <span className="text-xs font-bold uppercase tracking-wider">LIVE 24/7</span>
+              <span className="text-xs font-bold uppercase tracking-wider">{t('liveNow')} 24/7</span>
             </div>
             <span className="hidden sm:inline-block px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold">
               HLS .m3u8 Ready
             </span>
           </div>
           <p className="text-xs sm:text-sm text-neutral-400 mt-1">
-            Real-time IPTV broadcast streams, Algerian channels, live sports, news, and Electronic Program Guide.
+            {t('liveTvGuideDesc')}
           </p>
         </div>
 
@@ -281,7 +286,7 @@ export const LiveTvPage: React.FC<LiveTvPageProps> = () => {
             className="px-3.5 py-2 rounded-xl bg-violet-600/20 hover:bg-violet-600/30 border border-violet-500/40 text-violet-300 text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer shadow-lg shadow-violet-900/20"
           >
             <Upload className="w-3.5 h-3.5" />
-            <span>Import M3U</span>
+            <span>{t('importM3u')}</span>
           </button>
 
           {channels !== MOCK_LIVE_CHANNELS && (
@@ -309,7 +314,7 @@ export const LiveTvPage: React.FC<LiveTvPageProps> = () => {
                   : 'bg-white/[0.04] text-neutral-400 hover:text-white hover:bg-white/[0.08] border border-white/[0.06]'
               }`}
             >
-              {cat === 'Algeria' ? '🇩🇿 Algeria' : cat}
+              {cat === 'All' ? t('allChannels') : cat === 'Algeria' ? '🇩🇿 Algeria' : cat}
             </button>
           ))}
         </div>
@@ -319,7 +324,7 @@ export const LiveTvPage: React.FC<LiveTvPageProps> = () => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400 pointer-events-none" />
           <input
             type="text"
-            placeholder="Find channel or show..."
+            placeholder={t('searchChannelsPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-white/[0.05] border border-white/[0.1] text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500"
@@ -536,13 +541,13 @@ export const LiveTvPage: React.FC<LiveTvPageProps> = () => {
           <div className="min-w-[700px] space-y-2">
             {/* Header Timeline Columns */}
             <div className="grid grid-cols-12 gap-2 text-xs font-semibold text-neutral-400 pb-2 border-b border-white/[0.08] px-3">
-              <div className="col-span-4">CHANNEL</div>
+              <div className="col-span-4">{t('channelInfo')}</div>
               <div className="col-span-4 text-violet-400 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-                <span>NOW (LIVE)</span>
+                <span>{t('nowPlaying')} ({t('liveNow')})</span>
               </div>
-              <div className="col-span-2">NEXT</div>
-              <div className="col-span-2">LATER</div>
+              <div className="col-span-2">{t('upcomingProgram')}</div>
+              <div className="col-span-2">{t('upcoming')}</div>
             </div>
 
             {/* Channel EPG Rows */}
@@ -610,7 +615,7 @@ export const LiveTvPage: React.FC<LiveTvPageProps> = () => {
             {filteredChannels.length === 0 && (
               <div className="py-12 text-center text-neutral-400 space-y-2">
                 <Tv className="w-8 h-8 mx-auto text-neutral-600" />
-                <p className="text-sm">No live channels match your search filter.</p>
+                <p className="text-sm">{t('noChannelsFound')}</p>
               </div>
             )}
           </div>
@@ -624,24 +629,24 @@ export const LiveTvPage: React.FC<LiveTvPageProps> = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Upload className="w-5 h-5 text-violet-400" />
-                <h3 className="font-display text-xl font-bold text-white">Import M3U Playlist</h3>
+                <h3 className="font-display text-xl font-bold text-white">{t('importM3uTitle')}</h3>
               </div>
               <button
                 onClick={() => setIsImportModalOpen(false)}
                 className="text-neutral-400 hover:text-white text-xs cursor-pointer"
               >
-                Close
+                {t('close')}
               </button>
             </div>
 
             <p className="text-xs text-neutral-400 leading-relaxed">
-              Paste raw M3U / M3U8 text containing <code className="text-violet-300">#EXTINF</code> tags and stream URLs to add your custom IPTV channels directly into StreamLay.
+              {t('importM3uDesc')}
             </p>
 
             {importSuccessMsg && (
               <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-2">
                 <Check className="w-4 h-4" />
-                <span>{importSuccessMsg}</span>
+                <span>{t('importSuccess')}</span>
               </div>
             )}
 
@@ -665,13 +670,13 @@ export const LiveTvPage: React.FC<LiveTvPageProps> = () => {
                   onClick={() => setIsImportModalOpen(false)}
                   className="px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-neutral-300 text-xs font-semibold transition-colors cursor-pointer"
                 >
-                  Cancel
+                  {t('cancel')}
                 </button>
                 <button
                   type="submit"
                   className="px-5 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition-all cursor-pointer shadow-lg shadow-violet-600/40"
                 >
-                  Import Channels
+                  {t('importButton')}
                 </button>
               </div>
             </form>

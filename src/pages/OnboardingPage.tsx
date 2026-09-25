@@ -15,18 +15,24 @@ import {
 } from 'lucide-react';
 import { PROFILE_PICTURE_CATEGORIES, ONBOARDING_TICKER_POSTERS } from '../data/mockData';
 import { TickerPoster } from '../types';
+import { getTranslation, getGenreTranslation } from '../utils/translations';
 
 interface OnboardingPageProps {
   onComplete: (name: string, avatarUrl?: string) => void;
   initialName?: string;
   initialAvatar?: string;
+  lang?: string;
 }
 
 export const OnboardingPage: React.FC<OnboardingPageProps> = ({
   onComplete,
   initialName = '',
   initialAvatar,
+  lang,
 }) => {
+  const activeLang = lang || (typeof document !== 'undefined' ? document.documentElement.lang : 'en');
+  const t = (key: Parameters<typeof getTranslation>[0]) => getTranslation(key, activeLang);
+
   const [name, setName] = useState(initialName);
   const [error, setError] = useState('');
   const [isTickerPaused, setIsTickerPaused] = useState(false);
@@ -42,7 +48,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
     e.preventDefault();
     const trimmed = name.trim();
     if (!trimmed) {
-      setError('Please enter your name or nickname to continue.');
+      setError(t('nameRequiredError'));
       return;
     }
     onComplete(trimmed, selectedAvatar);
@@ -161,7 +167,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
               </div>
               <p className="text-[11px] text-neutral-400 flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Featured TV Series & Movies Ticker
+                {t('featuredTickerSubtitle')}
               </p>
             </div>
           </div>
@@ -170,7 +176,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
           <div
             id="onboarding-posters-ticker"
             className="flex-1 overflow-hidden relative group/ticker py-0.5"
-            title="Click any poster to preview"
+            title={t('clickToPreview')}
           >
             {/* Edge Fade Masks */}
             <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-black/80 to-transparent z-10 pointer-events-none" />
@@ -206,7 +212,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
                       )}
                     </div>
                     <div className="flex items-center gap-2 text-[10px] text-neutral-400">
-                      <span className="text-pink-300 font-semibold">{item.badge || item.type}</span>
+                      <span className="text-pink-300 font-semibold">{item.badge || (item.type === 'Movie' ? t('movie') : t('tvSeries'))}</span>
                       <span>•</span>
                       <span className="flex items-center text-amber-300 font-bold">
                         <Star className="w-2.5 h-2.5 fill-amber-400 mr-0.5" />
@@ -225,17 +231,17 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
               type="button"
               onClick={() => setIsTickerPaused(!isTickerPaused)}
               className="p-1.5 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] text-neutral-300 hover:text-white transition-colors cursor-pointer text-xs flex items-center gap-1 border border-white/[0.06]"
-              title={isTickerPaused ? 'Resume Ticker' : 'Pause Ticker'}
+              title={isTickerPaused ? t('playTicker') : t('pauseTicker')}
             >
               {isTickerPaused ? (
                 <>
                   <Play className="w-3.5 h-3.5 fill-current" />
-                  <span className="text-[11px] font-medium hidden sm:inline">Play Ticker</span>
+                  <span className="text-[11px] font-medium hidden sm:inline">{t('playTicker')}</span>
                 </>
               ) : (
                 <>
                   <Pause className="w-3.5 h-3.5" />
-                  <span className="text-[11px] font-medium hidden sm:inline">Pause</span>
+                  <span className="text-[11px] font-medium hidden sm:inline">{t('pauseTicker')}</span>
                 </>
               )}
             </button>
@@ -252,13 +258,13 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
           <div className="text-center mb-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/15 border border-violet-500/30 text-violet-300 text-xs font-semibold mb-3 shadow-lg shadow-violet-950/40">
               <Sparkles className="w-3.5 h-3.5 text-pink-400 animate-pulse" />
-              <span>Unlimited TV Series & Blockbuster Movies</span>
+              <span>{t('unlimitedShowsMovies')}</span>
             </div>
             <h1 className="font-display text-2xl sm:text-3xl font-black text-white tracking-tight mb-2">
-              Who is Watching Today?
+              {t('whoIsWatching')}
             </h1>
             <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed max-w-md mx-auto">
-              Enter your name to build your personal watchlist, access 4K streams, and explore original series and films.
+              {t('onboardingDesc')}
             </p>
           </div>
 
@@ -269,7 +275,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
                 htmlFor="user-name-input"
                 className="block text-xs font-semibold uppercase tracking-wider text-neutral-300 mb-2"
               >
-                Profile Name or Nickname
+                {t('profileNameOrNickname')}
               </label>
               <div className="relative">
                 <input
@@ -280,7 +286,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
                     setName(e.target.value);
                     if (error) setError('');
                   }}
-                  placeholder="e.g. CinemaFan, Alex, or Neo"
+                  placeholder={t('namePlaceholder')}
                   maxLength={32}
                   autoFocus
                   className="w-full px-4 py-3 rounded-xl bg-white/[0.05] border border-white/[0.12] text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30 text-sm font-medium transition-all"
@@ -292,7 +298,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
 
             {/* Quick Profile Suggestions */}
             <div className="flex items-center flex-wrap gap-2 pt-0.5">
-              <span className="text-[11px] text-neutral-500 font-medium">Suggestions:</span>
+              <span className="text-[11px] text-neutral-500 font-medium">{t('suggestions')}</span>
               {['Cinema Lover', 'Alex', 'Jordan', 'Guest'].map((suggestion) => (
                 <button
                   key={suggestion}
@@ -313,10 +319,10 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
               <div className="flex items-center justify-between mb-2.5">
                 <span className="text-xs font-semibold uppercase tracking-wider text-neutral-300 flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-pink-400" />
-                  <span>Choose Profile Avatar</span>
+                  <span>{t('chooseProfileAvatar')}</span>
                 </span>
                 <span className="text-[10px] font-bold text-pink-300 bg-pink-500/20 px-2 py-0.5 rounded-full border border-pink-500/30">
-                  Onegai AiPri Series
+                  {t('onegaiAiPriSeries')}
                 </span>
               </div>
 
@@ -352,7 +358,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
                 })}
               </div>
               <p className="text-[11px] text-neutral-400 text-center mt-2">
-                Avatar: <strong className="text-pink-300">{onegaiAipriAvatars.find((a) => a.url === selectedAvatar)?.name || 'Custom Avatar'}</strong>
+                {t('avatar')}: <strong className="text-pink-300">{onegaiAipriAvatars.find((a) => a.url === selectedAvatar)?.name || 'Custom Avatar'}</strong>
               </p>
             </div>
 
@@ -362,7 +368,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
               type="submit"
               className="w-full py-3.5 rounded-xl bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-sm shadow-xl shadow-purple-900/40 hover:shadow-purple-900/60 flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
             >
-              <span>Start Watching Now</span>
+              <span>{t('startWatchingNow')}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
@@ -371,11 +377,11 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
           <div className="mt-5 pt-4 border-t border-white/[0.06] grid grid-cols-2 gap-3 text-center">
             <div className="flex items-center justify-center gap-1.5 text-xs text-neutral-400">
               <Film className="w-3.5 h-3.5 text-violet-400" />
-              <span>4K Ultra HD & Spatial Sound</span>
+              <span>{t('ultraHdAndSound')}</span>
             </div>
             <div className="flex items-center justify-center gap-1.5 text-xs text-neutral-400">
               <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
-              <span>Instant Playback • No Ads</span>
+              <span>{t('instantPlaybackNoAds')}</span>
             </div>
           </div>
         </div>
@@ -390,14 +396,14 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-pink-400" />
-                <span>Streaming Now on StreamLay</span>
+                <span>{t('streamingNowOn')}</span>
               </span>
               <span className="hidden sm:inline-block text-[11px] text-neutral-400">
-                • 6 Exclusive TV Series & 4K Blockbusters
+                • {t('featuredTickerSubtitle')}
               </span>
             </div>
             <span className="text-[11px] text-violet-400 font-semibold">
-              Click any poster to inspect
+              {t('clickToPreview')}
             </span>
           </div>
 
@@ -426,7 +432,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
                         : 'bg-violet-600 text-white'
                     }`}
                   >
-                    {item.type === 'Movie' ? 'MOVIE' : 'TV SERIES'}
+                    {item.type === 'Movie' ? t('movie') : t('tvSeries')}
                   </span>
                 </div>
 
@@ -441,7 +447,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
                     {item.title}
                   </p>
                   <span className="text-[9px] text-neutral-400 truncate">
-                    {item.genres[0]} • {item.releaseYear}
+                    {getGenreTranslation(item.genres[0], activeLang)} • {item.releaseYear}
                   </span>
                 </div>
               </button>
@@ -475,6 +481,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
                 type="button"
                 onClick={() => setSelectedPosterPreview(null)}
                 className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center transition-colors cursor-pointer border border-white/20"
+                title={t('close')}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -487,7 +494,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
                 />
                 <div>
                   <span className="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase bg-violet-600 text-white mb-1 inline-block">
-                    {selectedPosterPreview.type}
+                    {selectedPosterPreview.type === 'Movie' ? t('movie') : t('tvSeries')}
                   </span>
                   <h3 className="font-display font-extrabold text-lg sm:text-xl text-white drop-shadow-md">
                     {selectedPosterPreview.title}
@@ -500,7 +507,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
                     <span>•</span>
                     <span>{selectedPosterPreview.releaseYear}</span>
                     <span>•</span>
-                    <span>{selectedPosterPreview.genres.join(', ')}</span>
+                    <span>{selectedPosterPreview.genres.map(g => getGenreTranslation(g, activeLang)).join(', ')}</span>
                   </div>
                 </div>
               </div>
@@ -509,7 +516,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
             {/* Poster Body */}
             <div className="p-5 space-y-4">
               <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
-                Available to stream in ultra-high bitrate 4K HDR right after onboarding. Enter your name and step into the theater.
+                {t('onboardingPreviewDesc')}
               </p>
 
               <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/[0.08]">
@@ -518,7 +525,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
                   onClick={() => setSelectedPosterPreview(null)}
                   className="px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-xs font-semibold text-neutral-300 hover:text-white transition-colors cursor-pointer"
                 >
-                  Close Preview
+                  {t('close')}
                 </button>
                 <button
                   type="button"
@@ -529,7 +536,7 @@ export const OnboardingPage: React.FC<OnboardingPageProps> = ({
                   }}
                   className="px-4 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-pink-600 hover:from-violet-500 hover:to-pink-500 text-xs font-bold text-white transition-all cursor-pointer shadow-lg shadow-purple-900/30 flex items-center gap-1.5"
                 >
-                  <span>Ready to Watch</span>
+                  <span>{t('startWatchingNow')}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>

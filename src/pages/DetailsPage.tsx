@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 import { MediaItem, Episode, UserProfile, CastMember, MovieChapter } from '../types';
 import { ContentRow } from '../components/ContentRow';
-import { TRANSLATIONS, normalizeLanguage } from '../utils/translations';
+import { TRANSLATIONS, normalizeLanguage, getGenreTranslation } from '../utils/translations';
 
 interface DetailsPageProps {
   item: MediaItem;
@@ -52,7 +52,7 @@ export const DetailsPage: React.FC<DetailsPageProps> = ({
   onShare,
 }) => {
   const inMyList = user.myListIds.includes(item.id);
-  const langKey = normalizeLanguage(user.language);
+  const langKey = normalizeLanguage(user.preferredLanguage);
   const t = TRANSLATIONS[langKey] || TRANSLATIONS.en;
   const isRTL = langKey === 'ar';
 

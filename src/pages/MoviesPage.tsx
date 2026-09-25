@@ -4,6 +4,7 @@ import { MediaItem, UserProfile } from '../types';
 import { HeroBanner } from '../components/HeroBanner';
 import { ContentRow } from '../components/ContentRow';
 import { MediaCard } from '../components/MediaCard';
+import { getTranslation, getGenreTranslation } from '../utils/translations';
 
 interface MoviesPageProps {
   moviesList: MediaItem[];
@@ -22,10 +23,13 @@ export const MoviesPage: React.FC<MoviesPageProps> = ({
   onViewDetails,
   onOpenTrailer,
 }) => {
+  const lang = user.preferredLanguage;
+  const t = (key: Parameters<typeof getTranslation>[0]) => getTranslation(key, lang);
+
   const [selectedGenre, setSelectedGenre] = useState<string>('All');
   const [sortBy, setSortBy] = useState<'popular' | 'rating' | 'newest'>('popular');
 
-  const movieGenres = ['All', ...Array.from(new Set(moviesList.flatMap((m) => m.genres)))];
+  const movieGenres: string[] = ['All', ...Array.from(new Set(moviesList.flatMap((m) => m.genres))).map(String)];
 
   const featuredMovie = moviesList.find((m) => m.id === 'mov-gta6') || moviesList[0];
   const trendingMovies = moviesList.filter((m) => m.isTrending);
@@ -48,9 +52,9 @@ export const MoviesPage: React.FC<MoviesPageProps> = ({
         <div className="w-16 h-16 rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-violet-400 mb-4 shadow-xl">
           <Film className="w-8 h-8" />
         </div>
-        <h2 className="font-display text-2xl font-bold text-white mb-2">No Movies in Catalog</h2>
+        <h2 className="font-display text-2xl font-bold text-white mb-2">{t('noMoviesTitle')}</h2>
         <p className="text-sm text-neutral-400 max-w-md mb-6">
-          Movies have been removed from the catalog. Enjoy streaming <span className="text-violet-300 font-medium">Himitsu no AiPri</span> in TV Series or explore Live TV channels.
+          {t('noMoviesDesc')}
         </p>
       </div>
     );
@@ -75,35 +79,38 @@ export const MoviesPage: React.FC<MoviesPageProps> = ({
       <div className="relative z-20 -mt-10 sm:-mt-14 space-y-8 max-w-7xl mx-auto">
         {/* Trending Movies Row */}
         <ContentRow
-          title="Trending Blockbusters"
-          subtitle="The most popular cinema experiences right now"
+          title={t('trendingBlockbusters')}
+          subtitle={t('trendingBlockbustersSubtitle')}
           items={trendingMovies}
           myListIds={user.myListIds}
           onToggleMyList={onToggleMyList}
           onPlay={onPlay}
           onViewDetails={onViewDetails}
+          lang={lang}
         />
 
         {/* New Releases Row */}
         <ContentRow
-          title="New In 4K UHD"
-          subtitle="Just added to the StreamLay cinematic vault"
+          title={t('newIn4kUhd')}
+          subtitle={t('newIn4kUhdSubtitle')}
           items={newReleases}
           myListIds={user.myListIds}
           onToggleMyList={onToggleMyList}
           onPlay={onPlay}
           onViewDetails={onViewDetails}
+          lang={lang}
         />
 
         {/* All-Time Top Rated Row */}
         <ContentRow
-          title="Critic Favorites"
-          subtitle="Highest rated movies across all genres"
+          title={t('criticFavorites')}
+          subtitle={t('criticFavoritesSubtitle')}
           items={topRatedMovies}
           myListIds={user.myListIds}
           onToggleMyList={onToggleMyList}
           onPlay={onPlay}
           onViewDetails={onViewDetails}
+          lang={lang}
         />
 
         {/* Explore All Movies Section with Genre Filter & Grid */}
@@ -113,10 +120,10 @@ export const MoviesPage: React.FC<MoviesPageProps> = ({
               <div className="flex items-center gap-2">
                 <Film className="w-5 h-5 text-violet-400" />
                 <h2 className="font-display text-xl sm:text-2xl font-bold text-white">
-                  All Feature Films
+                  {t('allFeatureFilms')}
                 </h2>
               </div>
-              <p className="text-xs text-neutral-400 mt-0.5">Explore movies with custom genre filters and sort options</p>
+              <p className="text-xs text-neutral-400 mt-0.5">{t('exploreMoviesSubtitle')}</p>
             </div>
 
             {/* Controls */}
@@ -133,7 +140,7 @@ export const MoviesPage: React.FC<MoviesPageProps> = ({
                         : 'bg-white/[0.04] text-neutral-400 hover:text-white border border-white/[0.06]'
                     }`}
                   >
-                    {g}
+                    {getGenreTranslation(g, lang)}
                   </button>
                 ))}
               </div>
@@ -144,9 +151,9 @@ export const MoviesPage: React.FC<MoviesPageProps> = ({
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="bg-[#171724] border border-white/[0.12] text-xs text-neutral-200 rounded-xl px-3 py-2 focus:outline-none focus:border-violet-500 cursor-pointer"
               >
-                <option value="popular">Most Popular</option>
-                <option value="rating">Highest Rated</option>
-                <option value="newest">Newest First</option>
+                <option value="popular">{t('mostPopular')}</option>
+                <option value="rating">{t('highestRated')}</option>
+                <option value="newest">{t('newestFirst')}</option>
               </select>
             </div>
           </div>
@@ -162,6 +169,7 @@ export const MoviesPage: React.FC<MoviesPageProps> = ({
                   onPlay={onPlay}
                   onViewDetails={onViewDetails}
                   size="compact"
+                  lang={lang}
                 />
               </div>
             ))}
@@ -171,3 +179,4 @@ export const MoviesPage: React.FC<MoviesPageProps> = ({
     </div>
   );
 };
+

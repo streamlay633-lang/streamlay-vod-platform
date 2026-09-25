@@ -3,6 +3,7 @@ import { Search, X, Filter, SlidersHorizontal, Sparkles, Film, Clapperboard, Sta
 import { MediaItem, MediaType, UserProfile } from '../types';
 import { MediaCard } from '../components/MediaCard';
 import { GENRE_LIST } from '../data/mockData';
+import { getTranslation, getGenreTranslation } from '../utils/translations';
 
 interface SearchPageProps {
   mediaList: MediaItem[];
@@ -19,6 +20,9 @@ export const SearchPage: React.FC<SearchPageProps> = ({
   onPlay,
   onViewDetails,
 }) => {
+  const lang = user.preferredLanguage;
+  const t = (key: Parameters<typeof getTranslation>[0]) => getTranslation(key, lang);
+
   const [query, setQuery] = useState('');
   const [selectedType, setSelectedType] = useState<'all' | MediaType>('all');
   const [selectedGenre, setSelectedGenre] = useState<string>('All');
@@ -115,10 +119,10 @@ export const SearchPage: React.FC<SearchPageProps> = ({
       {/* Top Search Header */}
       <div className="max-w-3xl mx-auto mb-8 text-center space-y-4">
         <h1 className="font-display text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-          Search Stream<span className="text-violet-400">Lay</span>
+          {t('searchStreamLay')}
         </h1>
         <p className="text-xs sm:text-sm text-neutral-400">
-          Find movies, television series, directors, genres, and 4K cinema titles.
+          {t('searchSubtitle')}
         </p>
 
         {/* Big Search Input Box */}
@@ -132,7 +136,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by title, genre, actor, or keyword..."
+            placeholder={t('searchPlaceholderLong')}
             autoFocus
             className="w-full ltr:pl-12 sm:ltr:pl-14 ltr:pr-12 rtl:pr-12 sm:rtl:pr-14 rtl:pl-12 py-4 rounded-2xl bg-[#12121e]/90 border border-white/[0.12] text-white placeholder-neutral-500 text-sm sm:text-lg focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/20 shadow-2xl transition-all"
           />
@@ -142,7 +146,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
               id="search-clear-btn"
               onClick={() => setQuery('')}
               className="absolute inset-y-0 ltr:right-0 rtl:left-0 ltr:pr-4 rtl:pl-4 flex items-center text-neutral-400 hover:text-white transition-colors cursor-pointer"
-              title="Clear search"
+              title={t('clearSearch')}
             >
               <div className="p-1 rounded-full bg-white/10 hover:bg-white/20">
                 <X className="h-4 w-4" />
@@ -154,7 +158,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
         {/* Real-time suggestions while typing */}
         {suggestions.length > 0 && (
           <div className="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs">
-            <span className="text-neutral-500 font-medium">Suggestions:</span>
+            <span className="text-neutral-500 font-medium">{t('suggestions')}</span>
             {suggestions.map((sug) => (
               <button
                 key={sug}
@@ -170,7 +174,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
         {/* Quick Popular Keywords Chips */}
         {!query && (
           <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-            <span className="text-xs text-neutral-500 font-medium">Popular:</span>
+            <span className="text-xs text-neutral-500 font-medium">{t('popular')}</span>
             {popularKeywords.map((tag) => (
               <button
                 key={tag}
@@ -197,7 +201,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
                   : 'text-neutral-400 hover:text-white'
               }`}
             >
-              All Types
+              {t('allTypes')}
             </button>
             <button
               onClick={() => setSelectedType('movie')}
@@ -208,7 +212,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
               }`}
             >
               <Film className="w-3.5 h-3.5" />
-              <span>Movies</span>
+              <span>{t('movies')}</span>
             </button>
             <button
               onClick={() => setSelectedType('series')}
@@ -219,7 +223,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
               }`}
             >
               <Clapperboard className="w-3.5 h-3.5" />
-              <span>Series</span>
+              <span>{t('series')}</span>
             </button>
           </div>
 
@@ -233,7 +237,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
             >
               {GENRE_LIST.map((g) => (
                 <option key={g} value={g} className="bg-[#171724] text-white">
-                  {g === 'All' ? 'All Genres' : g}
+                  {g === 'All' ? t('allGenres') : getGenreTranslation(g, lang)}
                 </option>
               ))}
             </select>
@@ -244,10 +248,10 @@ export const SearchPage: React.FC<SearchPageProps> = ({
               onChange={(e) => setSelectedYear(e.target.value)}
               className="bg-[#171724] border border-white/[0.12] text-xs text-neutral-200 rounded-xl px-3 py-2 focus:outline-none focus:border-violet-500 cursor-pointer"
             >
-              <option value="all">All Years</option>
-              <option value="2025">2025 (Newest)</option>
-              <option value="2024">2024</option>
-              <option value="older">2023 & Earlier</option>
+              <option value="all">{t('allYears')}</option>
+              <option value="2025">{t('year2025')}</option>
+              <option value="2024">{t('year2024')}</option>
+              <option value="older">{t('yearOlder')}</option>
             </select>
 
             {/* Rating Select */}
@@ -256,10 +260,10 @@ export const SearchPage: React.FC<SearchPageProps> = ({
               onChange={(e) => setMinRating(Number(e.target.value))}
               className="bg-[#171724] border border-white/[0.12] text-xs text-neutral-200 rounded-xl px-3 py-2 focus:outline-none focus:border-violet-500 cursor-pointer"
             >
-              <option value={0}>Any Rating</option>
-              <option value={8.5}>8.5+ ⭐ Critical Acclaim</option>
-              <option value={8.0}>8.0+ ⭐ Highly Rated</option>
-              <option value={7.5}>7.5+ ⭐ Good</option>
+              <option value={0}>{t('anyRating')}</option>
+              <option value={8.5}>{t('criticalAcclaim')}</option>
+              <option value={8.0}>{t('highlyRated')}</option>
+              <option value={7.5}>{t('goodRating')}</option>
             </select>
 
             {/* Sort Select */}
@@ -270,10 +274,10 @@ export const SearchPage: React.FC<SearchPageProps> = ({
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="bg-[#171724] border border-white/[0.12] text-xs text-neutral-200 rounded-xl px-3 py-2 focus:outline-none focus:border-violet-500 cursor-pointer"
               >
-                <option value="relevance">Relevance</option>
-                <option value="newest">Newest First</option>
-                <option value="popular">Most Popular</option>
-                <option value="rating">Highest Rated</option>
+                <option value="relevance">{t('relevance')}</option>
+                <option value="newest">{t('newestFirst')}</option>
+                <option value="popular">{t('mostPopular')}</option>
+                <option value="rating">{t('highestRated')}</option>
               </select>
             </div>
 
@@ -283,7 +287,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
                 onClick={resetFilters}
                 className="text-xs text-violet-400 hover:text-violet-300 font-medium px-2 py-1 transition-colors cursor-pointer"
               >
-                Reset
+                {t('reset')}
               </button>
             )}
           </div>
@@ -294,10 +298,10 @@ export const SearchPage: React.FC<SearchPageProps> = ({
       <div>
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm text-neutral-400 font-medium">
-            Showing <span className="text-white font-semibold">{filteredResults.length}</span> titles
+            {t('showingTitles')} <span className="text-white font-semibold">{filteredResults.length}</span> {t('titlesCount')}
             {query && (
               <span>
-                {' '}for "<span className="text-violet-300 font-semibold">{query}</span>"
+                {' '}{t('forQuery')} "<span className="text-violet-300 font-semibold">{query}</span>"
               </span>
             )}
           </p>
@@ -315,6 +319,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
                   onPlay={onPlay}
                   onViewDetails={onViewDetails}
                   size="compact"
+                  lang={lang}
                 />
               </div>
             ))}
@@ -329,9 +334,9 @@ export const SearchPage: React.FC<SearchPageProps> = ({
               <Search className="w-8 h-8 opacity-70" />
             </div>
 
-            <h3 className="font-display text-xl font-bold text-white">No streamable titles found</h3>
+            <h3 className="font-display text-xl font-bold text-white">{t('noStreamableFound')}</h3>
             <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
-              We couldn't find any matches for your query. Try broadening your keywords, resetting your filters, or browsing our trending recommendations.
+              {t('noStreamableFoundDesc')}
             </p>
 
             <button
@@ -339,7 +344,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
               className="px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition-all cursor-pointer inline-flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4" />
-              <span>Reset Filters & Explore All</span>
+              <span>{t('resetFiltersExploreAll')}</span>
             </button>
           </div>
         )}
@@ -347,3 +352,4 @@ export const SearchPage: React.FC<SearchPageProps> = ({
     </div>
   );
 };
+

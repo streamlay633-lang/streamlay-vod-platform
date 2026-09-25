@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MediaItem } from '../types';
 import { MediaCard } from './MediaCard';
+import { getTranslation } from '../utils/translations';
 
 interface ContentRowProps {
   title: string;
@@ -13,6 +14,7 @@ interface ContentRowProps {
   onViewDetails: (item: MediaItem) => void;
   onSeeAll?: () => void;
   cardSize?: 'normal' | 'large' | 'compact';
+  lang?: string;
 }
 
 export const ContentRow: React.FC<ContentRowProps> = ({
@@ -25,8 +27,10 @@ export const ContentRow: React.FC<ContentRowProps> = ({
   onViewDetails,
   onSeeAll,
   cardSize = 'normal',
+  lang,
 }) => {
   const rowRef = useRef<HTMLDivElement>(null);
+  const activeLang = lang || (typeof document !== 'undefined' ? document.documentElement.lang : 'en');
 
   const scroll = (direction: 'left' | 'right') => {
     if (rowRef.current) {
@@ -63,7 +67,7 @@ export const ContentRow: React.FC<ContentRowProps> = ({
             onClick={onSeeAll}
             className="text-xs font-semibold text-violet-400 hover:text-violet-300 transition-colors flex items-center gap-1 cursor-pointer"
           >
-            <span>Explore all</span>
+            <span>{getTranslation('exploreAll', activeLang)}</span>
             <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180" />
           </button>
         )}
@@ -94,6 +98,7 @@ export const ContentRow: React.FC<ContentRowProps> = ({
               onPlay={onPlay}
               onViewDetails={onViewDetails}
               size={cardSize}
+              lang={activeLang}
             />
           ))}
         </div>

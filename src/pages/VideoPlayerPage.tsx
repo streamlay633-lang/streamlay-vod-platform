@@ -19,6 +19,7 @@ import {
   FastForward
 } from 'lucide-react';
 import { MediaItem, Episode } from '../types';
+import { getTranslation } from '../utils/translations';
 
 interface VideoPlayerPageProps {
   item: MediaItem;
@@ -27,6 +28,7 @@ interface VideoPlayerPageProps {
   onPlayNextEpisode?: () => void;
   onProgressUpdate?: (mediaId: string, progressPercentage: number) => void;
   nextItem?: MediaItem;
+  lang?: string;
 }
 
 export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
@@ -36,7 +38,11 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
   onPlayNextEpisode,
   onProgressUpdate,
   nextItem,
+  lang,
 }) => {
+  const activeLang = lang || (typeof document !== 'undefined' ? document.documentElement.lang : 'en');
+  const t = (key: Parameters<typeof getTranslation>[0]) => getTranslation(key, activeLang);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const controlsTimeoutRef = useRef<any>(null);
@@ -80,11 +86,20 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
       return match ? match[1] : null;
     }
     if (
+      trimmed.includes('playmogo.com') ||
       trimmed.includes('goodstream.one') ||
       trimmed.includes('/embed') ||
       trimmed.includes('embed-') ||
-      trimmed.includes('youtube.com/embed') ||
+      trimmed.includes('/e/') ||
+      trimmed.includes('youtube.com') ||
+      trimmed.includes('youtu.be') ||
       trimmed.includes('player.vimeo.com')
+    ) {
+      return trimmed;
+    }
+    if (
+      (trimmed.startsWith('http://') || trimmed.startsWith('https://')) &&
+      !trimmed.match(/\.(mp4|webm|ogg|m3u8|mov)(\?|$)/i)
     ) {
       return trimmed;
     }
@@ -291,6 +306,8 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
           className="w-full h-full border-0 absolute inset-0 z-0 bg-black"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
           allowFullScreen
+          scrolling="no"
+          frameBorder="0"
         />
       ) : (
         <video
@@ -325,13 +342,13 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
             id="player-back-btn"
             onClick={onBack}
             className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all cursor-pointer shadow-lg"
-            title="Exit Player"
+            title={t('backToBrowse')}
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
             <span className="text-[11px] font-bold uppercase tracking-wider text-violet-400">
-              Now Streaming {embedUrl ? '• External Stream' : `in ${videoQuality}`}
+              {t('nowPlaying')} {embedUrl ? `• ${t('openStream')}` : `in ${videoQuality}`}
             </span>
             <h2 className="font-display font-bold text-sm sm:text-lg text-white truncate max-w-md sm:max-w-xl drop-shadow">
               {displayTitle}
@@ -346,10 +363,10 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md text-white text-xs font-semibold border border-white/20 transition-all flex items-center gap-1.5 shadow-xl cursor-pointer"
-              title="Open video in new tab"
+              title={t('openStream')}
             >
               <ExternalLink className="w-3.5 h-3.5 text-violet-300" />
-              <span className="hidden sm:inline">Open Stream</span>
+              <span className="hidden sm:inline">{t('openStream')}</span>
             </a>
           )}
 
@@ -364,7 +381,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
               }}
               className="px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md text-white text-xs font-semibold border border-white/20 transition-all flex items-center gap-1.5 shadow-xl cursor-pointer"
             >
-              <span>Skip Intro</span>
+              <span>{t('skipIntro')}</span>
               <SkipForward className="w-3.5 h-3.5" />
             </button>
           )}
@@ -380,13 +397,13 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
       {showUpNextOverlay && (
         <div className="absolute top-20 right-6 z-30 max-w-sm rounded-2xl bg-[#12121e]/95 backdrop-blur-xl border border-violet-500/40 p-4 shadow-2xl animate-in fade-in slide-in-from-right duration-300">
           <span className="text-[10px] font-bold uppercase tracking-wider text-violet-400 block mb-1">
-            Up Next in 15 seconds
+            {t('upNextIn')}
           </span>
           <h4 className="font-semibold text-white text-sm truncate">
             {nextItem ? nextItem.title : 'Season 2: The Ethereal Fracture'}
           </h4>
           <p className="text-xs text-neutral-400 mt-1 line-clamp-2">
-            Stay tuned as the story continues directly with no commercial interruption.
+            {t('upNextDesc')}
           </p>
           <div className="flex items-center gap-2 mt-3">
             <button
@@ -400,13 +417,13 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
               }}
               className="flex-1 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition-all cursor-pointer"
             >
-              Play Now
+              {t('play')}
             </button>
             <button
               onClick={() => setShowUpNextOverlay(false)}
               className="px-3 py-2 rounded-xl bg-white/10 text-xs text-neutral-300 hover:text-white transition-colors cursor-pointer"
             >
-              Dismiss
+              {t('dismiss')}
             </button>
           </div>
         </div>
@@ -454,7 +471,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
               id="player-toggle-play-btn"
               onClick={togglePlay}
               className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-transform hover:scale-105 cursor-pointer"
-              title={isPlaying ? 'Pause (Space)' : 'Play (Space)'}
+              title={isPlaying ? t('pause') : t('play')}
             >
               {isPlaying ? <Pause className="w-5 h-5 fill-white" /> : <Play className="w-5 h-5 fill-white ml-0.5" />}
             </button>
@@ -463,7 +480,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
             <button
               onClick={() => seekRelative(-10)}
               className="p-2 text-neutral-300 hover:text-white transition-colors cursor-pointer"
-              title="Rewind 10s (Left Arrow)"
+              title={t('rewind10s')}
             >
               <RotateCcw className="w-4 h-4" />
             </button>
@@ -472,7 +489,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
             <button
               onClick={() => seekRelative(10)}
               className="p-2 text-neutral-300 hover:text-white transition-colors cursor-pointer"
-              title="Forward 10s (Right Arrow)"
+              title={t('forward10s')}
             >
               <RotateCw className="w-4 h-4" />
             </button>
@@ -482,7 +499,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
               <button
                 onClick={onPlayNextEpisode}
                 className="p-2 text-neutral-300 hover:text-white transition-colors cursor-pointer"
-                title="Next Episode"
+                title={t('nextEpisode')}
               >
                 <FastForward className="w-4 h-4" />
               </button>
@@ -493,7 +510,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
               <button
                 onClick={toggleMute}
                 className="p-2 text-neutral-300 hover:text-white transition-colors cursor-pointer"
-                title={isMuted ? 'Unmute (M)' : 'Mute (M)'}
+                title={isMuted ? t('unmute') : t('mute')}
               >
                 {isMuted || volume === 0 ? <VolumeX className="w-4 h-4 text-red-400" /> : <Volume2 className="w-4 h-4" />}
               </button>
@@ -529,7 +546,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
                   ? 'bg-violet-600/30 border-violet-400 text-violet-300'
                   : 'bg-transparent border-transparent text-neutral-300 hover:text-white'
               }`}
-              title="Subtitles & CC"
+              title={t('subtitles')}
             >
               <Subtitles className="w-4 h-4" />
             </button>
@@ -544,7 +561,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
               className={`p-2 rounded-xl transition-colors cursor-pointer ${
                 isSettingsOpen ? 'bg-white/20 text-white' : 'text-neutral-300 hover:text-white'
               }`}
-              title="Playback Settings"
+              title={t('streamPreferences')}
             >
               <Settings className="w-4 h-4" />
             </button>
@@ -553,7 +570,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
             <button
               onClick={togglePiP}
               className="p-2 text-neutral-300 hover:text-white transition-colors cursor-pointer hidden sm:block"
-              title="Picture in Picture"
+              title={t('pictureInPicture')}
             >
               <ExternalLink className="w-4 h-4" />
             </button>
@@ -563,7 +580,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
               id="player-fullscreen-btn"
               onClick={toggleFullscreen}
               className="p-2 text-neutral-300 hover:text-white transition-colors cursor-pointer"
-              title={isFullscreen ? 'Exit Fullscreen (F)' : 'Fullscreen (F)'}
+              title={isFullscreen ? t('exitFullscreen') : t('enterFullscreen')}
             >
               {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
             </button>
@@ -575,7 +592,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
                 {settingsTab === 'main' && (
                   <div className="space-y-1">
                     <div className="px-2 py-1.5 font-bold text-white border-b border-white/[0.08] mb-1 flex items-center justify-between">
-                      <span>Stream Preferences</span>
+                      <span>{t('streamPreferences')}</span>
                       <span className="text-[10px] text-violet-400 font-semibold">{videoQuality}</span>
                     </div>
 
@@ -583,7 +600,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
                       onClick={() => setSettingsTab('quality')}
                       className="w-full px-2.5 py-2 rounded-xl hover:bg-white/[0.06] flex items-center justify-between text-neutral-300 hover:text-white transition-colors"
                     >
-                      <span>Quality</span>
+                      <span>{t('quality')}</span>
                       <span className="text-neutral-400">{videoQuality} &rarr;</span>
                     </button>
 
@@ -591,7 +608,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
                       onClick={() => setSettingsTab('speed')}
                       className="w-full px-2.5 py-2 rounded-xl hover:bg-white/[0.06] flex items-center justify-between text-neutral-300 hover:text-white transition-colors"
                     >
-                      <span>Playback Speed</span>
+                      <span>{t('playbackSpeed')}</span>
                       <span className="text-neutral-400">{playbackSpeed}x &rarr;</span>
                     </button>
 
@@ -599,15 +616,15 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
                       onClick={() => setSettingsTab('subtitles')}
                       className="w-full px-2.5 py-2 rounded-xl hover:bg-white/[0.06] flex items-center justify-between text-neutral-300 hover:text-white transition-colors"
                     >
-                      <span>Subtitles</span>
-                      <span className="text-neutral-400">{subtitle} &rarr;</span>
+                      <span>{t('subtitles')}</span>
+                      <span className="text-neutral-400">{subtitle === 'Off' ? t('off') : subtitle} &rarr;</span>
                     </button>
 
                     <button
                       onClick={() => setSettingsTab('audio')}
                       className="w-full px-2.5 py-2 rounded-xl hover:bg-white/[0.06] flex items-center justify-between text-neutral-300 hover:text-white transition-colors"
                     >
-                      <span>Audio Track</span>
+                      <span>{t('audioTrack')}</span>
                       <span className="text-neutral-400">Atmos 5.1 &rarr;</span>
                     </button>
                   </div>
@@ -620,7 +637,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
                       onClick={() => setSettingsTab('main')}
                       className="text-[11px] text-violet-400 font-semibold mb-2 block hover:underline"
                     >
-                      &larr; Back to settings
+                      &larr; {t('backToSettings')}
                     </button>
                     {['4K Ultra HD (Dolby Vision)', '1080p Full HD', '720p HD', 'Auto (Dynamic Bandwidth)'].map((q) => (
                       <button
@@ -645,7 +662,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
                       onClick={() => setSettingsTab('main')}
                       className="text-[11px] text-violet-400 font-semibold mb-2 block hover:underline"
                     >
-                      &larr; Back to settings
+                      &larr; {t('backToSettings')}
                     </button>
                     {[0.5, 0.75, 1, 1.25, 1.5, 2].map((s) => (
                       <button
@@ -653,7 +670,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
                         onClick={() => handleSpeedChange(s)}
                         className="w-full px-2.5 py-2 rounded-xl hover:bg-white/[0.06] flex items-center justify-between text-neutral-300 hover:text-white transition-colors"
                       >
-                        <span>{s === 1 ? '1.0x (Normal)' : `${s}x`}</span>
+                        <span>{s === 1 ? t('normalSpeed') : `${s}x`}</span>
                         {playbackSpeed === s && <Check className="w-3.5 h-3.5 text-violet-400" />}
                       </button>
                     ))}
@@ -667,7 +684,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
                       onClick={() => setSettingsTab('main')}
                       className="text-[11px] text-violet-400 font-semibold mb-2 block hover:underline"
                     >
-                      &larr; Back to settings
+                      &larr; {t('backToSettings')}
                     </button>
                     {(['Off', 'English', 'Spanish', 'French', 'German'] as const).map((sub) => (
                       <button
@@ -678,7 +695,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
                         }}
                         className="w-full px-2.5 py-2 rounded-xl hover:bg-white/[0.06] flex items-center justify-between text-neutral-300 hover:text-white transition-colors"
                       >
-                        <span>{sub}</span>
+                        <span>{sub === 'Off' ? t('off') : sub}</span>
                         {subtitle === sub && <Check className="w-3.5 h-3.5 text-violet-400" />}
                       </button>
                     ))}
@@ -692,7 +709,7 @@ export const VideoPlayerPage: React.FC<VideoPlayerPageProps> = ({
                       onClick={() => setSettingsTab('main')}
                       className="text-[11px] text-violet-400 font-semibold mb-2 block hover:underline"
                     >
-                      &larr; Back to settings
+                      &larr; {t('backToSettings')}
                     </button>
                     {[
                       'English [Original] (Dolby Atmos 5.1)',

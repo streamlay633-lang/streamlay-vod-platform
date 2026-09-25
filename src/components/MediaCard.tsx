@@ -1,6 +1,7 @@
 import React from 'react';
 import { Play, Plus, Check, Star, Info } from 'lucide-react';
 import { MediaItem } from '../types';
+import { getTranslation, getGenreTranslation, normalizeLanguage } from '../utils/translations';
 
 interface MediaCardProps {
   item: MediaItem;
@@ -9,6 +10,7 @@ interface MediaCardProps {
   onPlay: (item: MediaItem, e?: React.MouseEvent) => void;
   onViewDetails: (item: MediaItem) => void;
   size?: 'normal' | 'large' | 'compact';
+  lang?: string;
 }
 
 export const MediaCard: React.FC<MediaCardProps> = ({
@@ -18,12 +20,18 @@ export const MediaCard: React.FC<MediaCardProps> = ({
   onPlay,
   onViewDetails,
   size = 'normal',
+  lang,
 }) => {
+  const activeLang = lang || (typeof document !== 'undefined' ? document.documentElement.lang : 'en');
   const widthClasses = {
     compact: 'w-[160px] sm:w-[180px]',
     normal: 'w-[180px] sm:w-[220px]',
     large: 'w-[240px] sm:w-[280px]',
   }[size];
+
+  const seasonsLabel = item.seasonsCount === 1 
+    ? getTranslation('seasonSingular', activeLang) 
+    : getTranslation('seasonsPlural', activeLang);
 
   return (
     <div
@@ -75,7 +83,7 @@ export const MediaCard: React.FC<MediaCardProps> = ({
                 onPlay(item, e);
               }}
               className="w-10 h-10 rounded-full bg-violet-600 hover:bg-violet-500 text-white flex items-center justify-center shadow-lg shadow-violet-600/50 hover:scale-105 active:scale-95 transition-all"
-              title="Play Now"
+              title={getTranslation('playNow', activeLang)}
             >
               <Play className="w-4 h-4 fill-white ltr:ml-0.5 rtl:mr-0.5" />
             </button>
@@ -88,7 +96,7 @@ export const MediaCard: React.FC<MediaCardProps> = ({
                   ? 'bg-violet-600/30 border-violet-400 text-violet-300'
                   : 'bg-black/60 border-white/20 text-white hover:border-white/50'
               }`}
-              title={inMyList ? 'Remove from My List' : 'Add to My List'}
+              title={inMyList ? getTranslation('inList', activeLang) : getTranslation('addToList', activeLang)}
             >
               {inMyList ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
             </button>
@@ -100,7 +108,7 @@ export const MediaCard: React.FC<MediaCardProps> = ({
                 onViewDetails(item);
               }}
               className="w-9 h-9 rounded-full bg-black/60 border border-white/20 text-white hover:border-white/50 flex items-center justify-center backdrop-blur-md ms-auto hover:bg-white/10 transition-all"
-              title="More Info"
+              title={getTranslation('moreInfo', activeLang)}
             >
               <Info className="w-4 h-4" />
             </button>
@@ -109,7 +117,7 @@ export const MediaCard: React.FC<MediaCardProps> = ({
           <div className="text-[11px] text-neutral-300 flex items-center gap-2">
             <span>{item.releaseYear}</span>
             <span>•</span>
-            <span>{item.type === 'movie' ? item.runtime : `${item.seasonsCount} Seasons`}</span>
+            <span>{item.type === 'movie' ? item.runtime : `${item.seasonsCount} ${seasonsLabel}`}</span>
           </div>
         </div>
       </div>
@@ -120,7 +128,9 @@ export const MediaCard: React.FC<MediaCardProps> = ({
           {item.title}
         </h3>
         <div className="flex items-center justify-between text-xs text-neutral-400 mt-1">
-          <span className="truncate">{item.genres.slice(0, 2).join(' • ')}</span>
+          <span className="truncate">
+            {item.genres.slice(0, 2).map((g) => getGenreTranslation(g, activeLang)).join(' • ')}
+          </span>
           <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] text-neutral-300 shrink-0 ms-1">
             {item.ageRating}
           </span>
@@ -129,3 +139,4 @@ export const MediaCard: React.FC<MediaCardProps> = ({
     </div>
   );
 };
+

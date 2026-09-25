@@ -425,7 +425,7 @@ export const MOCK_MEDIA: MediaItem[] = [
         photoUrl: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/Profile%20Pictures/Onegai%20Aipri/Olivia%20Yuki.png'
       }
     ],
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    videoUrl: 'https://playmogo.com/e/jlarlo506i3k',
     trailerUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
     seasons: [
       {
@@ -436,7 +436,7 @@ export const MOCK_MEDIA: MediaItem[] = [
             id: 'ep-onegai-1',
             episodeNumber: 1,
             seasonNumber: 1,
-            title: 'Please Grant My Wish! AiPri Debut',
+            title: 'Onegai AiPri - E1: Please Grant My Wish! AiPri Debut',
             duration: '24:18',
             airDate: 'April 2026',
             isNew: true,
@@ -444,7 +444,7 @@ export const MOCK_MEDIA: MediaItem[] = [
             audioLanguage: 'Japanese (Original) • English Sub',
             description: 'Inori moves to Onegai Town and meets Aoi Yumemiya and Fortu, unlocking her new stage with the sacred Mirror Pact.',
             thumbnail: 'https://oxspfjyamtfmniiuqmwv.supabase.co/storage/v1/object/public/TV%20Series/Onegai%20Aipri/Backdrop/Onegai%20Aipri%20-%20Backdrop.jpeg',
-            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+            videoUrl: 'https://playmogo.com/e/jlarlo506i3k'
           },
           {
             id: 'ep-onegai-2',

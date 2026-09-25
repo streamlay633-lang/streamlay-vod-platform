@@ -170,8 +170,9 @@ export default function App() {
 
   // Start playback routine
   const startPlayback = (item: MediaItem, episode?: Episode) => {
+    const episodeToPlay = episode || (item.type === 'series' && item.seasons?.[0]?.episodes?.[0] ? item.seasons[0].episodes[0] : undefined);
     setSelectedMedia(item);
-    setSelectedEpisode(episode);
+    setSelectedEpisode(episodeToPlay);
     setCurrentPage('player');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -341,6 +342,7 @@ export default function App() {
             onComplete={handleCompleteOnboarding}
             initialName={user.name}
             initialAvatar={user.avatarUrl}
+            lang={user.preferredLanguage}
           />
         )}
 
@@ -372,7 +374,7 @@ export default function App() {
         )}
 
         {/* Page 4: Live TV Page */}
-        {currentPage === 'livetv' && <LiveTvPage />}
+        {currentPage === 'livetv' && <LiveTvPage lang={user.preferredLanguage} />}
 
         {/* Page 5: Profile Page */}
         {currentPage === 'profile' && (
@@ -406,6 +408,7 @@ export default function App() {
           <VideoPlayerPage
             item={selectedMedia}
             episode={selectedEpisode}
+            lang={user.preferredLanguage}
             onBack={() => {
               // Return to details or home
               setCurrentPage(selectedMedia ? 'details' : 'home');
@@ -444,6 +447,7 @@ export default function App() {
       {/* Global Trailer Modal */}
       <TrailerModal
         item={trailerItem}
+        lang={user.preferredLanguage}
         onClose={() => setTrailerItem(null)}
         onPlayFull={(item) => {
           setTrailerItem(null);

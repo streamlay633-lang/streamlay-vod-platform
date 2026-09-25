@@ -4,6 +4,7 @@ import { MediaItem, UserProfile } from '../types';
 import { HeroBanner } from '../components/HeroBanner';
 import { ContentRow } from '../components/ContentRow';
 import { MediaCard } from '../components/MediaCard';
+import { getTranslation, getGenreTranslation } from '../utils/translations';
 
 interface SeriesPageProps {
   seriesList: MediaItem[];
@@ -22,10 +23,13 @@ export const SeriesPage: React.FC<SeriesPageProps> = ({
   onViewDetails,
   onOpenTrailer,
 }) => {
+  const lang = user.preferredLanguage;
+  const t = (key: Parameters<typeof getTranslation>[0]) => getTranslation(key, lang);
+
   const [selectedGenre, setSelectedGenre] = useState<string>('All');
   const [sortBy, setSortBy] = useState<'popular' | 'rating' | 'newest'>('popular');
 
-  const genres = ['All', ...Array.from(new Set(seriesList.flatMap((s) => s.genres)))];
+  const genres: string[] = ['All', ...Array.from(new Set(seriesList.flatMap((s) => s.genres))).map(String)];
 
   const featuredSeriesList = [
     ...seriesList.filter((s) => s.id === 'ser-aipri'),
@@ -52,6 +56,7 @@ export const SeriesPage: React.FC<SeriesPageProps> = ({
         <HeroBanner
           items={featuredSeriesList}
           item={featuredSeries}
+          user={user}
           myListIds={user.myListIds}
           inMyList={user.myListIds.includes(featuredSeries.id)}
           onToggleMyList={onToggleMyList}
@@ -65,24 +70,26 @@ export const SeriesPage: React.FC<SeriesPageProps> = ({
       <div className="relative z-20 -mt-10 sm:-mt-14 space-y-8 max-w-7xl mx-auto">
         {/* Trending Series Row */}
         <ContentRow
-          title="Trending TV Series"
-          subtitle="The most streamed serialized storytelling right now"
+          title={t('trendingSeries')}
+          subtitle={t('trendingSeriesSubtitle')}
           items={trendingSeries}
           myListIds={user.myListIds}
           onToggleMyList={onToggleMyList}
           onPlay={onPlay}
           onViewDetails={onViewDetails}
+          lang={lang}
         />
 
         {/* Top Rated Series Row */}
         <ContentRow
-          title="Acclaimed Masterpieces"
-          subtitle="Top reviewed multi-season prestige dramas"
+          title={t('acclaimedMasterpieces')}
+          subtitle={t('acclaimedMasterpiecesSubtitle')}
           items={topRatedSeries}
           myListIds={user.myListIds}
           onToggleMyList={onToggleMyList}
           onPlay={onPlay}
           onViewDetails={onViewDetails}
+          lang={lang}
         />
 
         {/* Explore All Series Section with Genre Pills & Grid */}
@@ -92,10 +99,10 @@ export const SeriesPage: React.FC<SeriesPageProps> = ({
               <div className="flex items-center gap-2">
                 <Clapperboard className="w-5 h-5 text-violet-400" />
                 <h2 className="font-display text-xl sm:text-2xl font-bold text-white">
-                  All TV Series Catalog
+                  {t('allSeriesCatalog')}
                 </h2>
               </div>
-              <p className="text-xs text-neutral-400 mt-0.5">Filter by genre and sort by popularity or StreamScore</p>
+              <p className="text-xs text-neutral-400 mt-0.5">{t('exploreSeriesSubtitle')}</p>
             </div>
 
             {/* Controls */}
@@ -112,7 +119,7 @@ export const SeriesPage: React.FC<SeriesPageProps> = ({
                         : 'bg-white/[0.04] text-neutral-400 hover:text-white border border-white/[0.06]'
                     }`}
                   >
-                    {g}
+                    {getGenreTranslation(g, lang)}
                   </button>
                 ))}
               </div>
@@ -123,9 +130,9 @@ export const SeriesPage: React.FC<SeriesPageProps> = ({
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="bg-[#171724] border border-white/[0.12] text-xs text-neutral-200 rounded-xl px-3 py-2 focus:outline-none focus:border-violet-500 cursor-pointer"
               >
-                <option value="popular">Most Popular</option>
-                <option value="rating">Highest Rated</option>
-                <option value="newest">Newest First</option>
+                <option value="popular">{t('mostPopular')}</option>
+                <option value="rating">{t('highestRated')}</option>
+                <option value="newest">{t('newestFirst')}</option>
               </select>
             </div>
           </div>
@@ -141,6 +148,7 @@ export const SeriesPage: React.FC<SeriesPageProps> = ({
                   onPlay={onPlay}
                   onViewDetails={onViewDetails}
                   size="compact"
+                  lang={lang}
                 />
               </div>
             ))}
@@ -150,3 +158,4 @@ export const SeriesPage: React.FC<SeriesPageProps> = ({
     </div>
   );
 };
+
